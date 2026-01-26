@@ -1,0 +1,100 @@
+.google-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.google-modal-content {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 450px;
+    color: #202124;
+    font-family: 'Roboto', 'Inter', sans-serif;
+    text-align: center;
+}
+
+.google-modal-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.google-modal-header h2 {
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.google-modal-subtitle {
+    font-size: 16px;
+    color: #202124;
+    margin-bottom: 32px;
+}
+
+.google-login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.input-field input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-field input:focus {
+    border-color: #1a73e8;
+    border-width: 2px;
+    padding: 12px 14px;
+}
+
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+}
+
+.secondary-btn {
+    background: none;
+    color: #1a73e8;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 4px;
+}
+
+.secondary-btn:hover {
+    background-color: #f6fafe;
+}
+
+.primary-btn {
+    background-color: #1a73e8;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .3), 0 1px 3px 1px rgba(60, 64, 67, .15);
+}
+
+.primary-btn:hover {
+    background-color: #1b66c9;
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .3), 0 2px 6px 2px rgba(60, 64, 67, .15);
+}

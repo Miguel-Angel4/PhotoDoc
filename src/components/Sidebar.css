@@ -1,0 +1,86 @@
+.sidebar {
+    width: 90px;
+    /* Narrow vertical rail */
+    background-color: var(--bg-sidebar);
+    /* Dark bg */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(255, 255, 255, 0.02);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    padding-top: 24px;
+}
+
+.sidebar-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    gap: 8px;
+}
+
+.logo-svg {
+    width: 40px;
+    height: 40px;
+}
+
+.logo-text {
+    color: #78dede;
+    /* Cyan/Teal matching icon */
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    align-items: center;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #a0a0a0;
+    /* Grey text */
+    cursor: pointer;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    width: 70px;
+    height: 70px;
+    /* Fixed height for consistent touch targets */
+    border-radius: 35px;
+    /* Rounded pill shape (effectively circle/pill) */
+    transition: all 0.2s;
+    border-left: none;
+    /* Removed previous border indicator */
+}
+
+/* Active State Design from Screenshot */
+.nav-item.active {
+    color: #fff;
+    /* Dark rounded background pill */
+    background-color: #263238;
+}
+
+.icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-icon {
+    width: 28px;
+    height: 28px;
+}
+
+.nav-item:hover:not(.active) {
+    color: #fff;
+}

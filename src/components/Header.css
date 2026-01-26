@@ -1,0 +1,104 @@
+.header {
+    height: var(--header-height);
+    background-color: #fff;
+    /* Removed shadow for a cleaner, flat look if original is flat, 
+     but usually a subtle one exists. Keeping subtle. */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1001;
+    /* Higher z-index */
+    display: flex;
+    align-items: center;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.logo {
+    font-size: 1.5rem;
+    /* Larger logo */
+    font-weight: 700;
+    color: #000;
+    /* Pure black for logo usually? Or Primary? keeping Primary based on analysis */
+    color: var(--primary-color);
+    letter-spacing: -0.5px;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.nav-link {
+    font-size: 1rem;
+    /* Standard size */
+    font-weight: 500;
+    /* Medium weight */
+    color: var(--text-secondary);
+    text-decoration: none;
+    /* Removed text-transform: uppercase */
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+.sign-up-text {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+}
+
+.bar {
+    width: 24px;
+    height: 2px;
+    background-color: #333;
+    border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: flex;
+    }
+
+    .nav-links {
+        position: absolute;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        flex-direction: column;
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-150%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        gap: 20px;
+        align-items: center;
+        /* Center items on mobile */
+    }
+
+    .nav-links.active {
+        transform: translateY(0);
+    }
+
+    .nav-link {
+        width: 100%;
+        text-align: center;
+        padding: 12px 0;
+    }
+}

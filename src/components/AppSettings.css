@@ -1,0 +1,344 @@
+.app-settings-container {
+    padding: 0;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #000;
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.settings-top-header {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.settings-top-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #fff;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.back-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.settings-content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.section-label {
+    color: #00bcd4;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.section-card {
+    background-color: #1a1d1f;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.section-list-card {
+    background-color: #1a1d1f;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.account-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.google-icon-circle {
+    width: 48px;
+    height: 48px;
+    background-color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.account-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.account-title {
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.account-email-text {
+    color: #b0b0b0;
+    font-size: 0.95rem;
+}
+
+.logout-btn,
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 25px;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: opacity 0.2s;
+}
+
+.logout-btn {
+    background-color: #72c6d4;
+    color: #000;
+}
+
+.login-btn {
+    background-color: #4285F4;
+    color: #fff;
+}
+
+.logout-btn:hover,
+.login-btn:hover {
+    opacity: 0.9;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.setting-item.disabled {
+    opacity: 0.5;
+}
+
+.setting-text {
+    flex: 1;
+}
+
+.setting-name {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.setting-desc {
+    color: #90a4ae;
+    font-size: 0.85rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* List Items (Contact/Info) */
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.item-name {
+    color: #fff;
+    font-size: 1rem;
+}
+
+.item-sub {
+    color: #607d8b;
+    font-size: 0.85rem;
+}
+
+.chevron {
+    color: #fff;
+    font-size: 1.5rem;
+    opacity: 0.6;
+}
+
+/* Switch Styling */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #454d55;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: #00bcd4;
+}
+
+input:checked+.slider:before {
+    transform: translateX(20px);
+}
+
+/* Added checkmark for the notification switch as seen in screenshot */
+input:checked+.slider:after {
+    content: '✔';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #000;
+    font-size: 10px;
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.version-info {
+    text-align: center;
+    color: #b0b0b0;
+    font-size: 0.9rem;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.version-num {
+    font-weight: 500;
+    color: #fff;
+}
+
+@media (max-width: 600px) {
+    .app-settings-container {
+        padding-bottom: 80px;
+    }
+}
+
+/* Usage and Plan Styles */
+.usage-v-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.usage-v-track {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    position: relative;
+    width: 100%;
+}
+
+.usage-v-bar {
+    height: 100%;
+    background: #00bcd4;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.usage-v-dot {
+    width: 12px;
+    height: 12px;
+    background: #00bcd4;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.4);
+}
+
+.usage-v-labels {
+    display: flex;
+    justify-content: space-between;
+    color: #607d8b;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.usage-v-center {
+    color: #fff;
+    font-size: 0.85rem;
+}
+
+.plan-v-text {
+    color: #90a4ae;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+}

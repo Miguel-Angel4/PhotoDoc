@@ -1,0 +1,67 @@
+.topbar {
+    height: 60px;
+    background-color: var(--bg-topbar);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: var(--input-bg);
+    padding: 8px 16px;
+    border-radius: 20px;
+    width: 400px;
+    gap: 10px;
+}
+
+.search-icon {
+    opacity: 0.5;
+    font-size: 0.9rem;
+    filter: grayscale(1);
+}
+
+.search-input {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    outline: none;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.search-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.topbar-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.action-btn {
+    background: none;
+    color: #ffffff;
+    padding: 8px;
+    border-radius: 50%;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Reset font size as we use SVGs now */
+    font-size: 0;
+}
+
+.action-btn svg {
+    width: 26px;
+    /* Slightly larger as requested */
+    height: 26px;
+}
+
+.action-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}

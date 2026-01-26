@@ -1,0 +1,271 @@
+.portfolio-container {
+    padding: 24px;
+    background-color: var(--bg-dark);
+    height: 100%;
+    overflow-y: auto;
+    color: var(--text-primary);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.portfolio-header {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 20px;
+}
+
+.portfolio-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.hashtags-dropdown {
+    background-color: #1a1d1f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+    padding: 8px 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.hashtags-dropdown:hover {
+    border-color: #00bcd4;
+    background-color: #26292b;
+}
+
+.hashtags-dropdown.active {
+    background-color: rgba(0, 188, 212, 0.1);
+    border-color: #00bcd4;
+    color: #00bcd4;
+}
+
+.hashtag-filter-wrapper {
+    position: relative;
+}
+
+.dropdown-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+}
+
+.hashtag-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: #1a1d1f;
+    border: 1px solid #333;
+    border-radius: 16px;
+    min-width: 200px;
+    z-index: 100;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    backdrop-filter: blur(15px);
+}
+
+.hashtag-option {
+    padding: 12px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #eceff1;
+    transition: all 0.2s;
+}
+
+.hashtag-option:hover {
+    background: rgba(0, 188, 212, 0.08);
+    color: #00bcd4;
+}
+
+.hashtag-option.selected {
+    background: rgba(0, 188, 212, 0.15);
+    color: #00bcd4;
+    font-weight: 700;
+}
+
+.portfolio-header .back-button {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.portfolio-header .back-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #00bcd4;
+    color: #00bcd4;
+}
+
+.folders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+    padding: 12px 0;
+}
+
+.folder-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.folder-card:hover {
+    background: rgba(0, 188, 212, 0.05);
+    border-color: #00bcd4;
+    transform: translateY(-4px);
+}
+
+.folder-icon-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+    color: #4fc3f7;
+}
+
+.folder-batch {
+    position: absolute;
+    top: -4px;
+    right: -8px;
+    background: #00bcd4;
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 800;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    box-shadow: 0 2px 8px rgba(0, 188, 212, 0.4);
+    border: 2px solid #1a1d1f;
+}
+
+.folder-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #eceff1;
+    text-align: center;
+}
+
+.portfolio-photo-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+    padding: 16px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.patient-owner-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #00bcd4;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.portfolio-timestamp {
+    color: #90a4ae;
+    font-size: 0.7rem;
+    text-align: right;
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.portfolio-card {
+    background-color: #000;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portfolio-card:hover {
+    transform: scale(1.02);
+    border-color: #00bcd4;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.portfolio-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.empty-portfolio-full {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 200px);
+    width: 100%;
+}
+
+.empty-portfolio-content {
+    text-align: center;
+    max-width: 400px;
+    padding: 40px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.empty-portfolio-content h3 {
+    color: #fff;
+    margin-bottom: 12px;
+    font-size: 1.4rem;
+}
+
+.empty-portfolio-content p {
+    color: #90a4ae;
+    line-height: 1.5;
+    font-size: 1rem;
+}
+
+.empty-icon {
+    margin-bottom: 24px;
+    color: #00bcd4;
+    opacity: 0.8;
+}

@@ -1,0 +1,227 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-dark);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background-color: var(--bg-dark);
+    /* Blends in, looks fullscreen */
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.modal-title {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 500;
+    flex: 1;
+    margin-left: 20px;
+}
+
+.save-btn {
+    background-color: var(--accent-color);
+    /* Teal */
+    color: #000;
+    /* Looks dark in screenshot, or white? Usually black on teal. Let's check user pref. "Guardar" button in screenshot looks Cyan/Teal background with Dark text. */
+    font-weight: 600;
+    padding: 8px 24px;
+    border-radius: 20px;
+    border: none;
+    font-size: 0.9rem;
+}
+
+.modal-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding-top: 60px;
+    /* Space from top */
+}
+
+.patient-form {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    /* Spacing between rows */
+    padding: 0 20px;
+}
+
+.form-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.field-icon {
+    color: #a0a0a0;
+    padding-top: 12px;
+    /* Align with input text approx */
+}
+
+/* Input Group Standard */
+.input-group {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #4a4a4a;
+    border-radius: 4px;
+    background-color: #1c2025;
+    /* Dark input bg */
+    height: 48px;
+    transition: border-color 0.2s;
+}
+
+.input-group:focus-within {
+    border-color: var(--accent-color);
+}
+
+.input-group input {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    color: #fff;
+    padding: 0 12px;
+    font-size: 1rem;
+    outline: none;
+}
+
+/* Outlined Label Trick for "Nombre" */
+.input-group.outlined {
+    /* To replicate the cut border: */
+    /* Simple approach: label overlapping border with bg */
+}
+
+.input-group.outlined label {
+    position: absolute;
+    left: 10px;
+    top: -9px;
+    background-color: var(--bg-dark);
+    /* Should match modal bg behind input if input bg is transparent? No input bg is distinct. */
+    /* Actually in screenshot, main bg is dark. Input has dark bg. The label sits on the border. */
+    background-color: #0d1112;
+    /* Match BODY/MODAL BG to hide border */
+    padding: 0 4px;
+    color: var(--accent-color);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Date Field Specifics */
+.date-group-container {
+    flex: 1;
+}
+
+.date-main-label {
+    display: block;
+    color: #a0a0a0;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+}
+
+.date-inputs {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.date-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.date-input-wrapper label {
+    font-size: 0.7rem;
+    color: #a0a0a0;
+}
+
+.date-input-wrapper input {
+    background-color: #1c2025;
+    border: 1px solid #4a4a4a;
+    color: #fff;
+    border-radius: 4px;
+    padding: 8px;
+    text-align: center;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+.date-input-wrapper input:focus {
+    border-color: var(--accent-color);
+}
+
+.date-input-wrapper:nth-child(1) input,
+.date-input-wrapper:nth-child(2) input {
+    width: 50px;
+}
+
+.date-input-wrapper:nth-child(3) input {
+    width: 70px;
+}
+
+.clear-date-btn {
+    background: none;
+    border: none;
+    color: #666;
+    margin-left: 8px;
+    cursor: pointer;
+}
+
+/* Phone Group */
+.phone-group {
+    padding-left: 12px;
+    gap: 12px;
+}
+
+.flag-icon {
+    width: 24px;
+    height: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.flag-stripe {
+    width: 100%;
+}
+
+.flag-stripe.red {
+    height: 25%;
+    background-color: #AD1519;
+}
+
+.flag-stripe.yellow {
+    height: 50%;
+    background-color: #FABD00;
+}
+
+.country-code {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Placeholder Styling */
+::placeholder {
+    color: #666;
+}

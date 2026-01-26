@@ -1,0 +1,734 @@
+.collage-editor-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-dark);
+    z-index: 100;
+    /* Topmost layer covering everything */
+    display: flex;
+    flex-direction: column;
+    color: var(--text-primary);
+    font-family: inherit;
+}
+
+/* Header */
+.collage-header {
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    background-color: #1a1d1f;
+    /* Slightly lighter than main bg */
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.ai-processing-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 188, 212, 0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: #00bcd4;
+    margin-left: 12px;
+}
+
+.ai-pulse {
+    width: 6px;
+    height: 6px;
+    background-color: #00bcd4;
+    border-radius: 50%;
+    animation: ai-pulse 1.5s infinite;
+}
+
+@keyframes ai-pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 188, 212, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(0, 188, 212, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 188, 212, 0);
+    }
+}
+
+.ai-loading-status {
+    font-size: 0.75rem;
+    color: #607d8b;
+    margin-left: 12px;
+    font-style: italic;
+}
+
+.collage-title-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.collage-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.save-collage-btn {
+    background-color: #263238;
+    color: #90a4ae;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.save-collage-btn:hover {
+    background-color: #37474f;
+    color: #ffffff;
+}
+
+/* Main Content */
+.collage-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Left Preview Area */
+.collage-preview-area {
+    flex: 1;
+    /* Takes remaining space */
+    background-color: #233133;
+    /* Dark Teal/Slate background from screenshot */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.collage-canvas {
+    width: min(90vw, 500px);
+    height: min(70vh, 500px);
+    aspect-ratio: 1/1;
+    margin: auto;
+    display: grid;
+    gap: 4px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    background-color: transparent;
+}
+
+.collage-canvas.border-active {
+    /* removed background-color: #ffffff and padding */
+    gap: 4px;
+    /* Maintain gap or adjust if needed */
+}
+
+.collage-canvas.border-active .collage-slot {
+    border: 3px solid #ffffff;
+    border-radius: 4px;
+    /* Optional: match slot radius */
+}
+
+/* Layout Definitions */
+.layout-2-cols {
+    grid-template-columns: 1fr 1fr;
+}
+
+.layout-2-rows {
+    grid-template-rows: 1fr 1fr;
+}
+
+.layout-3-cols {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.layout-3-rows {
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+/* In 'Whole' mode, let the central container scale smaller if needed */
+.fit-mode-whole.collage-canvas {
+    align-items: center;
+}
+
+.layout-grid-4 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.layout-1-left-2-right {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+        "slot1 slot2"
+        "slot1 slot3";
+}
+
+.layout-1-right-2-left {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+        "slot2 slot1"
+        "slot3 slot1";
+}
+
+.layout-1-right-2-left .slot-1 {
+    grid-area: slot1;
+}
+
+.layout-1-right-2-left .slot-2 {
+    grid-area: slot2;
+}
+
+.layout-1-right-2-left .slot-3 {
+    grid-area: slot3;
+}
+
+.layout-1-left-2-right .slot-1 {
+    grid-area: slot1;
+}
+
+.layout-1-left-2-right .slot-2 {
+    grid-area: slot2;
+}
+
+.layout-1-left-2-right .slot-3 {
+    grid-area: slot3;
+}
+
+.layout-1-top-2-bottom {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+        "slot1 slot1"
+        "slot2 slot3";
+}
+
+.layout-1-top-2-bottom .slot-1 {
+    grid-area: slot1;
+}
+
+.layout-1-top-2-bottom .slot-2 {
+    grid-area: slot2;
+}
+
+.layout-1-top-2-bottom .slot-3 {
+    grid-area: slot3;
+}
+
+.layout-4-mix {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.layout-1-vertical-split::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background-color: #ffffff;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.layout-1-horizontal-split::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    background-color: #ffffff;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.layout-1-vertical-split {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0;
+}
+
+.layout-1-horizontal-split {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0;
+}
+
+.collage-slot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #455a64;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.collage-slot img {
+    position: relative;
+    z-index: 1;
+}
+
+.collage-slot.is-empty {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+.collage-slot.is-empty:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #90a4ae;
+}
+
+/* Selection Mode Header */
+.collage-header.selection-mode {
+    background: #1e1e1e;
+    justify-content: space-between;
+    padding: 0 16px;
+}
+
+.close-selection-btn,
+.menu-dots-btn {
+    background: none;
+    border: none;
+    color: white;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.close-selection-btn:hover,
+.menu-dots-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.selection-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+}
+
+.selection-count {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.selection-date {
+    font-size: 12px;
+    color: #90a4ae;
+}
+
+/* Contextual Tools Centered Grid */
+.contextual-tools-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.tools-toolbar.grid-view-centered {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    max-width: 600px;
+}
+
+.tools-toolbar.grid-view-centered .tool-btn {
+    width: 80px;
+    height: 80px;
+    background: #263238;
+}
+
+/* Rotations */
+.collage-slot img {
+    /* transition is handled inline in JS now for rotation */
+    backface-visibility: hidden;
+}
+
+/* Remvoved selected highlight for simplicity */
+.collage-slot.is-selected {
+    border-radius: 4px;
+}
+
+/* Filled slots have specific background/border behaviors */
+.collage-slot.has-image {
+    background-color: transparent;
+    /* Changed from #1a1d1f for transparency */
+    border: none;
+}
+
+/* In 'Whole' mode, hide the slot background to blend the contain fit */
+.fit-mode-whole .collage-slot.has-image {
+    background-color: transparent;
+}
+
+.collage-slot img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.collage-slot img.fit-contain {
+    object-fit: contain;
+}
+
+.collage-slot img.fit-cover {
+    object-fit: cover;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    image-rendering: auto;
+    /* Standard high-quality scaling */
+}
+
+/* Specific overrides for Zoom (Square) mode */
+.fit-mode-face .collage-slot,
+.fit-mode-eyes .collage-slot,
+.fit-mode-nose .collage-slot,
+.fit-mode-mouth .collage-slot {
+    aspect-ratio: 1/1;
+    height: 100%;
+    min-width: min(100%, 250px);
+}
+
+.fit-mode-face .collage-slot img,
+.fit-mode-eyes .collage-slot img,
+.fit-mode-nose .collage-slot img,
+.fit-mode-mouth .collage-slot img {
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Right Tools Area */
+.collage-tools-area {
+    width: 400px;
+    background-color: var(--bg-dark);
+    border-left: 1px solid #2a2a2a;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+}
+
+.tools-toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tool-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #607d8b;
+    gap: 6px;
+    padding: 8px;
+    border-radius: 8px;
+    width: 64px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.tool-btn.active,
+.tool-btn:hover {
+    background-color: #263238;
+    color: #ffffff;
+}
+
+/* Custom highlight for active tool matching screenshot (cyan bottom border) */
+.tool-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    height: 3px;
+    background-color: #00bcd4;
+    /* Cyan */
+    border-radius: 2px;
+}
+
+.zoom-label-long {
+    font-size: 10px !important;
+    line-height: 1.1;
+    text-align: center;
+    white-space: normal;
+}
+
+.tool-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.tool-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* Section Title */
+.tools-section-title {
+    font-size: 0.8rem;
+    color: #90a4ae;
+    text-align: center;
+    margin-bottom: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Grid Layouts */
+.layout-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.layout-option-btn {
+    width: 100%;
+    aspect-ratio: 1;
+    background: none;
+    border: 1px solid #455a64;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.layout-option-btn:hover,
+.layout-option-btn.selected {
+    border-color: #00bcd4;
+    background-color: rgba(0, 188, 212, 0.1);
+}
+
+.layout-option-btn svg {
+    width: 100%;
+    height: 100%;
+    color: #eceff1;
+}
+
+/* Badge for IA */
+.tool-badge-ia {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: #37474f;
+    color: #cfd8dc;
+    font-size: 0.5rem;
+    padding: 1px 3px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* Zoom Options */
+.zoom-grid {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.zoom-option-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #1a1d1f;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    width: 60px;
+    /* Adjust as needed */
+    height: 80px;
+    cursor: pointer;
+    gap: 8px;
+    transition: all 0.2s;
+    color: #607d8b;
+}
+
+.zoom-option-btn:hover,
+.zoom-option-btn.selected {
+    background-color: #263238;
+    color: #ffffff;
+}
+
+/* Wrapper to center icon */
+.zoom-icon-wrapper {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.zoom-icon-wrapper svg {
+    width: 100%;
+    height: 100%;
+}
+
+.zoom-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Sidebar Photos Section */
+.sidebar-photos-section {
+    margin-top: auto;
+    /* Push to bottom if flex layout allows, or just margin */
+    padding-top: 24px;
+    border-top: 1px solid #2a2a2a;
+    width: 100%;
+}
+
+.sidebar-photos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.sidebar-photo-item {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: grab;
+    border: 1px solid #455a64;
+    transition: border-color 0.2s;
+}
+
+.sidebar-photo-item:hover {
+    border-color: #00bcd4;
+}
+
+.sidebar-photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-photos-text {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #607d8b;
+    font-size: 0.8rem;
+    padding: 20px 0;
+}
+
+/* Date Overlay */
+.date-overlay {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: transparent;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 500;
+    pointer-events: none;
+    z-index: 10;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+}
+
+/* Rotation Slider */
+.rotation-slider-container {
+    width: 600px;
+    background: #1e1e1e;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rotation-slider-header {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.rotation-slider-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.slider-value-label {
+    font-size: 12px;
+    color: #90a4ae;
+    width: 30px;
+    text-align: center;
+}
+
+.rotation-range-input {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 6px;
+    background: #455a64;
+    border-radius: 3px;
+    outline: none;
+}
+
+.rotation-range-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #80deea;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #1e1e1e;
+}
+
+.rotation-reset-btn {
+    background: none;
+    border: none;
+    color: #90a4ae;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.rotation-reset-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.rotation-reset-btn svg {
+    width: 20px;
+    height: 20px;
+}
