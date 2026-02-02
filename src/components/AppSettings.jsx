@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import './AppSettings.css';
 import { supabase } from '../supabaseClient';
 import TermsAndConditions from './TermsAndConditions';
+import PrivacyPolicy from './PrivacyPolicy';
 
 const AppSettings = ({ googleAccount, onConnect, onDisconnect, onBack, photos = [] }) => {
     const [showTerms, setShowTerms] = useState(false);
+    const [showPrivacy, setShowPrivacy] = useState(false);
     const [biometricsEnabled, setBiometricsEnabled] = useState(false);
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
@@ -193,13 +195,13 @@ const AppSettings = ({ googleAccount, onConnect, onDisconnect, onBack, photos = 
                             </div>
                             <span className="chevron">›</span>
                         </div>
-                        <a href="https://photodoc.app/privacy" target="_blank" rel="noopener noreferrer" className="list-item">
+                        <div className="list-item clickable" onClick={() => setShowPrivacy(true)}>
                             <div className="item-content">
                                 <span className="item-name">Política de Privacidad</span>
-                                <span className="item-sub">https://photodoc.app/privacy_policy.html</span>
+                                <span className="item-sub">Ver política de privacidad</span>
                             </div>
                             <span className="chevron">›</span>
-                        </a>
+                        </div>
                     </div>
                 </section>
 
@@ -212,6 +214,10 @@ const AppSettings = ({ googleAccount, onConnect, onDisconnect, onBack, photos = 
             <TermsAndConditions
                 isOpen={showTerms}
                 onClose={() => setShowTerms(false)}
+            />
+            <PrivacyPolicy
+                isOpen={showPrivacy}
+                onClose={() => setShowPrivacy(false)}
             />
         </div>
     );
