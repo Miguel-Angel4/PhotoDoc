@@ -1,6 +1,39 @@
 import React, { useState } from 'react';
 import './CreatePatientModal.css';
 
+// Common country codes
+const COUNTRY_CODES = [
+    { code: '+34', country: 'ES', icon: '🇪🇸' },
+    { code: '+1', country: 'US/CA', icon: '🇺🇸' },
+    { code: '+44', country: 'UK', icon: '🇬🇧' },
+    { code: '+33', country: 'FR', icon: '🇫🇷' },
+    { code: '+49', country: 'DE', icon: '🇩🇪' },
+    { code: '+39', country: 'IT', icon: '🇮🇹' },
+    { code: '+351', country: 'PT', icon: '🇵🇹' },
+    { code: '+52', country: 'MX', icon: '🇲🇽' },
+    { code: '+54', country: 'AR', icon: '🇦🇷' },
+    { code: '+55', country: 'BR', icon: '🇧🇷' },
+    { code: '+57', country: 'CO', icon: '🇨🇴' },
+    { code: '+56', country: 'CL', icon: '🇨🇱' },
+    { code: '+51', country: 'PE', icon: '🇵🇪' },
+    { code: '+58', country: 'VE', icon: '🇻🇪' },
+    { code: '+593', country: 'EC', icon: '🇪🇨' },
+    { code: '+41', country: 'CH', icon: '🇨🇭' },
+    { code: '+32', country: 'BE', icon: '🇧🇪' },
+    { code: '+31', country: 'NL', icon: '🇳🇱' },
+    { code: '+46', country: 'SE', icon: '🇸🇪' },
+    { code: '+47', country: 'NO', icon: '🇳🇴' },
+    { code: '+45', country: 'DK', icon: '🇩🇰' },
+    { code: '+353', country: 'IE', icon: '🇮🇪' },
+    { code: '+30', country: 'GR', icon: '🇬🇷' },
+    { code: '+48', country: 'PL', icon: '🇵🇱' },
+    { code: '+7', country: 'RU', icon: '🇷🇺' },
+    { code: '+81', country: 'JP', icon: '🇯🇵' },
+    { code: '+86', country: 'CN', icon: '🇨🇳' },
+    { code: '+91', country: 'IN', icon: '🇮🇳' },
+    { code: '+61', country: 'AU', icon: '🇦🇺' },
+];
+
 const CreatePatientModal = ({ isOpen, onClose, onSave, patientToEdit }) => {
     const [formData, setFormData] = useState({
         name: '',
@@ -8,18 +41,28 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, patientToEdit }) => {
         month: '',
         year: '',
         phone: '',
+        countryCode: '+34',
         email: ''
     });
 
     React.useEffect(() => {
         if (isOpen && patientToEdit) {
             const [day, month, year] = patientToEdit.dob ? patientToEdit.dob.split('/') : ['', '', ''];
+            // Extract country code if present (simple heuristic: starts with +)
+            // Assuming phone stored might be "123456789" or "+34 123456789"
+            // For now, let's keep it simple. If we were storing it joined, we'd split it.
+            // Let's assume phone is just the number for editing unless we decide to store full string.
+            // WE WILL STORE as separate for now in UI but save as full string maybe?
+            // "saved as database" -> "Patients JSON".
+            // Let's assume phone is just the digits in the edit object for simplicity or we'd need to parse.
+
             setFormData({
                 name: patientToEdit.name || '',
                 day: day || '',
                 month: month || '',
                 year: year || '',
-                phone: patientToEdit.phone || '',
+                phone: patientToEdit.phone || '', // Assuming this comes clean or we'd need to parse
+                countryCode: patientToEdit.countryCode || '+34',
                 email: patientToEdit.email || ''
             });
         } else if (isOpen && !patientToEdit) {
@@ -29,6 +72,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, patientToEdit }) => {
                 month: '',
                 year: '',
                 phone: '',
+                countryCode: '+34',
                 email: ''
             });
         }
@@ -45,13 +89,76 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, patientToEdit }) => {
     };
 
     const handleDateChange = (field, value) => {
+        // Allow only numbers
+        if (value && !/^\d+$/.test(value)) return;
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
+    const handlePhoneChange = (e) => {
+        const value = e.target.value;
+        // Allow only numbers
+        if (value && !/^\d+$/.test(value)) return;
+        setFormData(prev => ({ ...prev, phone: value }));
+    };
+
+    const validateForm = () => {
+        // 1. Name: Alphabetic only (allowing spaces), start with Uppercase
+        // Regex: First char [A-Z], then [a-zA-Z\s]*
+        const nameRegex = /^[A-Z][a-zA-Z\u00C0-\u017F\s]*$/; // Added unicode range for accents (Á, ñ, etc)
+        if (!nameRegex.test(formData.name)) {
+            alert('El nombre debe empezar con mayúscula y contener solo letras.');
+            return false;
+        }
+
+        // 2. Date: Not in future
+        if (!formData.day || !formData.month || !formData.year) {
+            alert('Por favor complete la fecha de nacimiento.');
+            return false;
+        }
+        const d = parseInt(formData.day, 10);
+        const m = parseInt(formData.month, 10);
+        const y = parseInt(formData.year, 10);
+
+        // Basic date validity
+        if (m < 1 || m > 12) { alert('Mes incorrecto.'); return false; }
+        const daysInMonth = new Date(y, m, 0).getDate();
+        if (d < 1 || d > daysInMonth) { alert(`Dia incorrecto para el mes ${m}.`); return false; }
+        if (y < 1900 || y > 2100) { alert('Año fuera de rango razonable.'); return false; }
+
+        const dob = new Date(y, m - 1, d);
+        const today = new Date();
+        // Reset hours to compare just dates
+        today.setHours(0, 0, 0, 0);
+
+        if (dob > today) {
+            alert('la persona no puede nacer en el futuro.');
+            return false;
+        }
+
+        // 3. Phone: Only numbers (handled in input), exactly 9 digits
+        // Assuming the input stores just the 9 digits
+        if (formData.phone.length !== 9) {
+            alert('El teléfono debe tener exactamente 9 números.');
+            return false;
+        }
+
+        // 4. Email: End in @gmail.com or @hotmail.com
+        const emailRegex = /@(?:gmail\.com|hotmail\.com)$/;
+        if (!emailRegex.test(formData.email)) {
+            alert('El correo electrónico debe ser de @gmail.com o @hotmail.com');
+            return false;
+        }
+
+        return true;
+    };
+
     const handleSubmit = () => {
-        console.log('handleSubmit called with formData:', formData);
         if (!formData.name) {
-            console.warn('Form submission blocked: Name is empty');
+            alert('El nombre es obligatorio.');
+            return;
+        }
+
+        if (!validateForm()) {
             return;
         }
 
@@ -59,13 +166,13 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, patientToEdit }) => {
             const newPatient = {
                 id: patientToEdit ? patientToEdit.id : Date.now(),
                 name: formData.name,
-                dob: `${formData.day}/${formData.month}/${formData.year}`,
+                dob: `${formData.day.padStart(2, '0')}/${formData.month.padStart(2, '0')}/${formData.year}`,
                 phone: formData.phone,
+                countryCode: formData.countryCode, // Save this separately to restore it
+                fullPhone: `${formData.countryCode} ${formData.phone}`, // Optional convenience
                 email: formData.email
             };
-            console.log('Invoking onSave with:', newPatient);
             onSave(newPatient);
-            console.log('onSave completed, closing modal');
             onClose();
         } catch (error) {
             console.error('Error in handleSubmit:', error);
@@ -156,18 +263,26 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, patientToEdit }) => {
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                         </div>
                         <div className="input-group phone-group">
-                            <div className="flag-icon">
-                                <div className="flag-stripe red"></div>
-                                <div className="flag-stripe yellow"></div>
-                                <div className="flag-stripe red"></div>
+                            <div className="country-select-wrapper">
+                                <select
+                                    className="country-select"
+                                    value={formData.countryCode}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, countryCode: e.target.value }))}
+                                >
+                                    {COUNTRY_CODES.map((country) => (
+                                        <option key={country.code + country.country} value={country.code}>
+                                            {country.icon} {country.code}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
-                            <span className="country-code">+34</span>
                             <input
                                 type="tel"
                                 id="phone"
                                 placeholder="Teléfono"
                                 value={formData.phone}
-                                onChange={handleChange}
+                                onChange={handlePhoneChange}
+                                maxLength="9"
                             />
                         </div>
                     </div>
