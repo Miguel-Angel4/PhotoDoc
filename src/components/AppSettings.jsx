@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import './AppSettings.css';
-import GoogleLoginModal from './GoogleLoginModal';
+import { supabase } from '../supabaseClient';
 import TermsAndConditions from './TermsAndConditions';
 
 const AppSettings = ({ googleAccount, onConnect, onDisconnect, onBack, photos = [] }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [showTerms, setShowTerms] = useState(false);
     const [biometricsEnabled, setBiometricsEnabled] = useState(false);
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
@@ -13,8 +12,29 @@ const AppSettings = ({ googleAccount, onConnect, onDisconnect, onBack, photos = 
     const limit = 50;
     const percentage = Math.min((photoCount / limit) * 100, 100);
 
+    const handleGoogleLogin = async () => {
+        try {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: window.location.origin
+                }
+            });
+            if (error) throw error;
+        } catch (error) {
+            console.error('Error logging in:', error);
+            alert('Error connecting to Google: ' + error.message);
+        }
+    };
+
     const handleDisconnect = () => {
-        onDisconnect();
+        try {
+            onDisconnect();
+            // Also sign out from Supabase
+            supabase.auth.signOut();
+        } catch (e) {
+            console.error('Error during disconnect:', e);
+        }
     };
 
     return (
@@ -59,7 +79,7 @@ const AppSettings = ({ googleAccount, onConnect, onDisconnect, onBack, photos = 
                                 Cerrar sesión en la cuenta
                             </button>
                         ) : (
-                            <button className="login-btn" onClick={() => setIsModalOpen(true)}>
+                            <button className="login-btn" onClick={handleGoogleLogin}>
                                 Conectar cuenta de Google
                             </button>
                         )}
@@ -188,12 +208,6 @@ const AppSettings = ({ googleAccount, onConnect, onDisconnect, onBack, photos = 
                     <span className="version-num">3.5.1 (198)</span>
                 </div>
             </div>
-
-            <GoogleLoginModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onConnect={onConnect}
-            />
 
             <TermsAndConditions
                 isOpen={showTerms}
