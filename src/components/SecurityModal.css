@@ -183,3 +183,87 @@
     cursor: pointer;
     text-decoration: underline;
 }
+
+/* Security Management Menu */
+.security-menu {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.security-menu-option {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    color: white;
+}
+
+.security-menu-option:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(4px);
+}
+
+.security-menu-option:active {
+    transform: scale(0.98);
+}
+
+.menu-option-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--primary-color, #007AFF);
+}
+
+.menu-option-text {
+    flex: 1;
+}
+
+.menu-option-text h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.menu-option-text p {
+    margin: 0;
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+.menu-option-arrow {
+    font-size: 1.5rem;
+    opacity: 0.5;
+    flex-shrink: 0;
+}
+
+.cancel-button {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 12px 32px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancel-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+}

@@ -25,14 +25,20 @@ function App() {
   }, [securitySettings]);
 
   const handleLockApp = () => {
-    if (securitySettings.pin) {
+    if (isAppLocked) {
+      // App is locked, open unlock modal
       setSecurityModalMode('unlock');
-      setIsAppLocked(true);
       setIsSecurityModalOpen(true);
     } else {
-      // First time setup if they try to lock without a PIN
-      setSecurityModalMode('setup');
-      setIsSecurityModalOpen(true);
+      // App is unlocked, show management menu
+      if (securitySettings.pin) {
+        setSecurityModalMode('manage');
+        setIsSecurityModalOpen(true);
+      } else {
+        // No PIN setup yet, go to setup
+        setSecurityModalMode('setup');
+        setIsSecurityModalOpen(true);
+      }
     }
   };
 
@@ -44,6 +50,11 @@ function App() {
   const handleSetupComplete = (pin) => {
     setSecuritySettings(prev => ({ ...prev, enabled: true, pin }));
     setIsAppLocked(false);
+    setIsSecurityModalOpen(false);
+  };
+
+  const handlePinChange = (newPin) => {
+    setSecuritySettings(prev => ({ ...prev, pin: newPin }));
     setIsSecurityModalOpen(false);
   };
 
@@ -252,6 +263,7 @@ function App() {
         mode={securityModalMode}
         onUnlock={handleUnlock}
         onSetupComplete={handleSetupComplete}
+        onPinChange={handlePinChange}
         onCancel={() => {
           if (!isAppLocked) setIsSecurityModalOpen(false);
         }}

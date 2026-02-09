@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './SecurityModal.css';
 
-const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onCancel, securitySettings }) => {
+const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onPinChange, onCancel, securitySettings }) => {
     const [pin, setPin] = useState('');
     const [confirmPin, setConfirmPin] = useState('');
     const [isConfirming, setIsConfirming] = useState(false);
     const [error, setError] = useState('');
     const [isBiometricAvailable, setIsBiometricAvailable] = useState(false);
+    const [subMode, setSubMode] = useState(null); // For 'changePin' within 'manage'
 
     useEffect(() => {
         // Check if biometrics are available
@@ -21,6 +22,17 @@ const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onC
                 .catch(console.error);
         }
     }, [isOpen, mode]);
+
+    // Reset states when modal closes or mode changes
+    useEffect(() => {
+        if (!isOpen) {
+            setPin('');
+            setConfirmPin('');
+            setIsConfirming(false);
+            setError('');
+            setSubMode(null);
+        }
+    }, [isOpen]);
 
     const handleBiometricSetup = async () => {
         if (!window.PublicKeyCredential) return;
@@ -94,10 +106,15 @@ const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onC
             setPin('');
         } else {
             if (pin === confirmPin) {
-                onSetupComplete(pin);
+                if (mode === 'setup') {
+                    onSetupComplete(pin);
+                } else if (subMode === 'changePin' && onPinChange) {
+                    onPinChange(pin);
+                }
                 setPin('');
                 setConfirmPin('');
                 setIsConfirming(false);
+                setSubMode(null);
             } else {
                 setError('Los PINs no coinciden');
                 setPin('');
@@ -111,6 +128,64 @@ const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onC
 
     if (!isOpen) return null;
 
+    // Management Menu View
+    if (mode === 'manage' && !subMode) {
+        return (
+            <div className="security-overlay">
+                <div className="security-modal">
+                    <div className="security-header">
+                        <div className="lock-icon-large">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                        <h2>Seguridad</h2>
+                        <p>Gestiona tus opciones de seguridad</p>
+                    </div>
+
+                    <div className="security-menu">
+                        <button className="security-menu-option" onClick={() => setSubMode('changePin')}>
+                            <div className="menu-option-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M12 1v6m0 6v6"></path>
+                                    <path d="M17 7l-5 5-5-5"></path>
+                                </svg>
+                            </div>
+                            <div className="menu-option-text">
+                                <h3>Cambiar PIN</h3>
+                                <p>Actualiza tu código de seguridad</p>
+                            </div>
+                            <div className="menu-option-arrow">›</div>
+                        </button>
+
+                        <button className="security-menu-option" onClick={handleBiometricSetup}>
+                            <div className="menu-option-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M12 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
+                                    <path d="M12 14c-3.866 0-7 1.79-7 4v2h14v-2c0-2.21-3.134-4-7-4z"></path>
+                                </svg>
+                            </div>
+                            <div className="menu-option-text">
+                                <h3>Huella Digital</h3>
+                                <p>{isBiometricAvailable ? 'Configurada' : 'Configurar autenticación biométrica'}</p>
+                            </div>
+                            <div className="menu-option-arrow">›</div>
+                        </button>
+                    </div>
+
+                    <button className="cancel-button" onClick={onCancel}>
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    // PIN Entry View (for unlock, setup, or changePin)
+    const isChangingPin = subMode === 'changePin';
+    const displayMode = isChangingPin ? 'setup' : mode;
+
     return (
         <div className="security-overlay">
             <div className="security-modal">
@@ -121,8 +196,22 @@ const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onC
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg>
                     </div>
-                    <h2>{mode === 'setup' ? (isConfirming ? 'Confirma tu PIN' : 'Configura tu PIN') : 'Aplicación Bloqueada'}</h2>
-                    <p>{mode === 'setup' ? 'Define un PIN de 4 dígitos para proteger tus datos.' : 'Introduce tu PIN para continuar'}</p>
+                    <h2>
+                        {isChangingPin
+                            ? (isConfirming ? 'Confirma tu nuevo PIN' : 'Nuevo PIN')
+                            : (displayMode === 'setup'
+                                ? (isConfirming ? 'Confirma tu PIN' : 'Configura tu PIN')
+                                : 'Aplicación Bloqueada')
+                        }
+                    </h2>
+                    <p>
+                        {isChangingPin
+                            ? 'Define tu nuevo PIN de 4 dígitos'
+                            : (displayMode === 'setup'
+                                ? 'Define un PIN de 4 dígitos para proteger tus datos.'
+                                : 'Introduce tu PIN para continuar')
+                        }
+                    </p>
                 </div>
 
                 <div className="pin-display">
@@ -139,8 +228,8 @@ const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onC
                             {num}
                         </button>
                     ))}
-                    <button className="numpad-btn secondary" onClick={onCancel}>
-                        Cancelar
+                    <button className="numpad-btn secondary" onClick={isChangingPin ? () => setSubMode(null) : onCancel}>
+                        {isChangingPin ? 'Atrás' : 'Cancelar'}
                     </button>
                     <button className="numpad-btn" onClick={() => handleNumberClick('0')}>
                         0
@@ -154,12 +243,12 @@ const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onC
                     </button>
                 </div>
 
-                {mode === 'setup' && (
+                {(displayMode === 'setup' || isChangingPin) && (
                     <div className="setup-actions">
                         <button className="setup-confirm-btn" onClick={handleSetup}>
                             {isConfirming ? 'Confirmar PIN' : 'Siguiente'}
                         </button>
-                        {!isConfirming && isBiometricAvailable && (
+                        {!isConfirming && !isChangingPin && isBiometricAvailable && (
                             <button className="biometric-setup-link" onClick={handleBiometricSetup}>
                                 Configurar Huella Digital
                             </button>
@@ -167,7 +256,7 @@ const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onC
                     </div>
                 )}
 
-                {mode === 'unlock' && isBiometricAvailable && (
+                {displayMode === 'unlock' && isBiometricAvailable && (
                     <button className="biometric-trigger-btn" onClick={handleBiometricAuth}>
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
