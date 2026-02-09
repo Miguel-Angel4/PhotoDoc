@@ -1164,45 +1164,82 @@
     .selection-action-bar-container {
         left: 0;
         bottom: 70px;
+        width: 100%;
+        padding: 0 4px;
     }
 
     .selection-action-bar {
-        padding: 12px;
+        padding: 8px 12px;
+        width: 100%;
+        border-radius: 12px;
     }
 
     .selection-options {
-        gap: 16px;
+        gap: 4px;
+        /* Very tight gap */
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .selection-option-btn {
+        flex: 1;
+        min-width: 0;
+        padding: 4px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .selection-option-btn .option-icon {
-        width: 36px;
-        height: 36px;
+        width: 24px;
+        height: 24px;
+        margin-bottom: 4px;
     }
 
     .selection-option-btn span {
-        font-size: 0.65rem;
+        font-size: 0.55rem;
         text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
     }
 
     /* Modals need to fit */
     .create-menu-container {
-        padding-bottom: 90px;
+        padding-bottom: 80px;
         padding-left: 10px;
         padding-right: 10px;
+        width: 100%;
     }
 
     .menu-options-row {
-        gap: 20px;
+        gap: 8px;
         /* Reduce gap on mobile */
-        justify-content: space-around;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .menu-option {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .option-icon-circle {
-        width: 50px;
-        height: 50px;
+        width: 44px;
+        height: 44px;
+        margin: 0 auto;
     }
 
     .option-label {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
+        text-align: center;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
