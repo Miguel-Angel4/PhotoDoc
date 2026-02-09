@@ -18,9 +18,7 @@ const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onP
                     const hasConfigured = localStorage.getItem('biometricConfigured') === 'true';
                     setIsBiometricAvailable(available && hasConfigured);
 
-                    if (available && hasConfigured && mode === 'unlock' && isOpen) {
-                        handleBiometricAuth();
-                    }
+                    // DON'T auto-trigger - let user choose manually by clicking the button
                 })
                 .catch(console.error);
         }
