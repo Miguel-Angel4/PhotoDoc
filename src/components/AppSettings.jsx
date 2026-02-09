@@ -4,11 +4,29 @@ import { supabase } from '../supabaseClient';
 import TermsAndConditions from './TermsAndConditions';
 import PrivacyPolicy from './PrivacyPolicy';
 
-const AppSettings = ({ googleAccount, onConnect, onDisconnect, onBack, photos = [] }) => {
+const AppSettings = ({ googleAccount, onConnect, onDisconnect, onBack, photos = [], securitySettings, setSecuritySettings }) => {
     const [showTerms, setShowTerms] = useState(false);
     const [showPrivacy, setShowPrivacy] = useState(false);
-    const [biometricsEnabled, setBiometricsEnabled] = useState(false);
+    // Remove local state: const [biometricsEnabled, setBiometricsEnabled] = useState(false);
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+    const toggleSecurity = () => {
+        if (!securitySettings.enabled) {
+            // Turning it ON: if no PIN, we must setup
+            if (!securitySettings.pin) {
+                // We'll let App handle the setup modal
+                // But for now let's just trigger a flag that App sees
+                setSecuritySettings(prev => ({ ...prev, enabled: false })); // Keep disabled until setup
+                // To trigger setup, we can call the handleLockApp equivalent but from here
+                // However, simpler is just to show a PIN setup if turning on for the first time
+                alert('Por favor, configure un PIN primero haciendo clic en el icono del candado en la parte superior.');
+            } else {
+                setSecuritySettings(prev => ({ ...prev, enabled: true }));
+            }
+        } else {
+            setSecuritySettings(prev => ({ ...prev, enabled: false }));
+        }
+    };
 
     const photoCount = photos.length;
     const limit = 50;
@@ -126,7 +144,7 @@ const AppSettings = ({ googleAccount, onConnect, onDisconnect, onBack, photos = 
                                 <p className="setting-desc">Al abrir la aplicación, se requerirá una autenticación biométrica (si este dispositivo lo admite) o un PIN que usted definirá.</p>
                             </div>
                             <label className="switch">
-                                <input type="checkbox" checked={biometricsEnabled} onChange={() => setBiometricsEnabled(!biometricsEnabled)} />
+                                <input type="checkbox" checked={securitySettings.enabled} onChange={toggleSecurity} />
                                 <span className="slider round"></span>
                             </label>
                         </div>

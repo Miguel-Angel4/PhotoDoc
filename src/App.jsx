@@ -1,16 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar'; // Deployment trigger
 import TopBar from './components/TopBar';
 import Dashboard from './components/Dashboard';
 import AccountSettings from './components/AccountSettings';
 import AppSettings from './components/AppSettings';
 import Portfolio from './components/Portfolio';
+import SecurityModal from './components/SecurityModal';
 import { dataService } from './dataService';
 import { supabase } from './supabaseClient';
 import './App.css';
 
 function App() {
   const [currentView, setCurrentView] = useState('patients');
+  const [securitySettings, setSecuritySettings] = useState(() => {
+    const saved = localStorage.getItem('securitySettings');
+    return saved ? JSON.parse(saved) : { enabled: false, pin: null };
+  });
+  const [isAppLocked, setIsAppLocked] = useState(securitySettings.enabled);
+  const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(securitySettings.enabled);
+  const [securityModalMode, setSecurityModalMode] = useState('unlock');
+
+  useEffect(() => {
+    localStorage.setItem('securitySettings', JSON.stringify(securitySettings));
+  }, [securitySettings]);
+
+  const handleLockApp = () => {
+    if (securitySettings.pin) {
+      setSecurityModalMode('unlock');
+      setIsAppLocked(true);
+      setIsSecurityModalOpen(true);
+    } else {
+      // First time setup if they try to lock without a PIN
+      setSecurityModalMode('setup');
+      setIsSecurityModalOpen(true);
+    }
+  };
+
+  const handleUnlock = () => {
+    setIsAppLocked(false);
+    setIsSecurityModalOpen(false);
+  };
+
+  const handleSetupComplete = (pin) => {
+    setSecuritySettings(prev => ({ ...prev, enabled: true, pin }));
+    setIsAppLocked(false);
+    setIsSecurityModalOpen(false);
+  };
+
   const [currentUser, setCurrentUser] = useState({
     email: 'usuario@ejemplo.com',
     name: 'Usuario'
@@ -173,7 +209,12 @@ function App() {
     <div className="App-layout">
       <Sidebar activeView={currentView} onNavigate={setCurrentView} />
       <div className="main-area">
-        <TopBar onNavigate={setCurrentView} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        <TopBar
+          onNavigate={setCurrentView}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onLock={handleLockApp}
+        />
         {currentView === 'patients' && (
           <Dashboard
             photos={photos}
@@ -200,9 +241,22 @@ function App() {
             onDisconnect={handleAccountDisconnect}
             onBack={() => setCurrentView('patients')}
             photos={photos}
+            securitySettings={securitySettings}
+            setSecuritySettings={setSecuritySettings}
           />
         )}
       </div>
+
+      <SecurityModal
+        isOpen={isSecurityModalOpen}
+        mode={securityModalMode}
+        onUnlock={handleUnlock}
+        onSetupComplete={handleSetupComplete}
+        onCancel={() => {
+          if (!isAppLocked) setIsSecurityModalOpen(false);
+        }}
+        securitySettings={securitySettings}
+      />
     </div>
   );
 }
