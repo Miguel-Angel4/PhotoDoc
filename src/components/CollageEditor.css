@@ -771,4 +771,30 @@
     .rotation-slider-container {
         width: 100%;
     }
+
+    /* Reduce tool sizes */
+    .tool-btn {
+        width: 48px;
+        height: 60px;
+        padding: 6px;
+    }
+
+    .tool-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .tool-label {
+        font-size: 0.55rem;
+    }
+
+    .zoom-option-btn {
+        width: 48px;
+        height: 64px;
+        padding: 8px;
+    }
+
+    .layout-option-btn {
+        padding: 2px;
+    }
 }
