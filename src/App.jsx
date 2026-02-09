@@ -1,3 +1,5 @@
+// PhotoDoc Main Application
+// Triggering new build to resolve deployment clone error
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar'; // Deployment trigger
 import TopBar from './components/TopBar';
