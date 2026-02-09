@@ -199,20 +199,47 @@ const Portfolio = ({ photos, patients }) => {
                                 ))}
                             </div>
                         ) : viewMode === 'gallery' ? (
-                            <div className="portfolio-grid">
-                                {photos.map(photo => (
-                                    <div key={photo.id} className="portfolio-card">
-                                        <img src={photo.url} alt="Portfolio Item" />
-                                        <div className="portfolio-photo-info">
-                                            <div className="patient-owner-tag">
-                                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                    <circle cx="12" cy="7" r="4"></circle>
-                                                </svg>
-                                                {getPatientName(photo.patientId)}
+                            <div className="portfolio-grouped-view">
+                                {folders.map(group => (
+                                    <div key={group} className="portfolio-section">
+                                        <div className="section-header" onClick={() => handleFolderClick(group)}>
+                                            <div className="section-title">
+                                                {groupingMode === 'hashtags' && <span className="section-icon">#</span>}
+                                                {groupingMode === 'date' && <span className="section-icon">📅</span>}
+                                                {groupingMode === 'user' && <span className="section-icon">👤</span>}
+                                                <h3>{group}</h3>
+                                                <span className="section-count">{groupedPhotos[group].length} fotos</span>
                                             </div>
-                                            <div className="portfolio-timestamp">{photo.date}</div>
+                                            <button className="section-expand-btn">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                                </svg>
+                                            </button>
                                         </div>
+                                        <div className="portfolio-grid">
+                                            {groupedPhotos[group].slice(0, 6).map(photo => (
+                                                <div key={photo.id} className="portfolio-card">
+                                                    <img src={photo.url} alt="Portfolio Item" />
+                                                    <div className="portfolio-photo-info">
+                                                        <div className="patient-owner-tag">
+                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                                <circle cx="12" cy="7" r="4"></circle>
+                                                            </svg>
+                                                            {getPatientName(photo.patientId)}
+                                                        </div>
+                                                        <div className="portfolio-timestamp">{photo.date}</div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {groupedPhotos[group].length > 6 && (
+                                            <div className="show-more-btn-wrapper">
+                                                <button className="show-more-btn" onClick={() => handleFolderClick(group)}>
+                                                    Ver todas ({groupedPhotos[group].length})
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
