@@ -129,3 +129,33 @@
     opacity: 1;
     transform: scale(1.1);
 }
+
+@media (max-width: 768px) {
+    .dashboard-content {
+        padding: 16px;
+    }
+
+    .patient-item {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    .create-patient-btn {
+        bottom: 80px;
+        /* Above Bottom Nav */
+        right: 16px;
+        height: 48px;
+        padding: 0 20px;
+        font-size: 0.9rem;
+    }
+
+    .content-header {
+        margin-bottom: 16px;
+    }
+}

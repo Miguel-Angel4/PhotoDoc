@@ -342,3 +342,31 @@
     color: #00bcd4;
     opacity: 0.8;
 }
+
+@media (max-width: 768px) {
+    .portfolio-container {
+        padding: 16px;
+    }
+
+    .portfolio-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .portfolio-header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .hashtags-dropdown {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+
+    .folders-grid,
+    .portfolio-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 16px;
+    }
+}

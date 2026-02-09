@@ -65,3 +65,35 @@
 .action-btn:hover {
     background-color: rgba(255, 255, 255, 0.05);
 }
+
+@media (max-width: 768px) {
+    .topbar {
+        padding: 0 16px;
+        height: 60px;
+        gap: 12px;
+    }
+
+    .search-container {
+        width: 100%;
+        max-width: none;
+        flex: 1;
+        padding: 6px 12px;
+    }
+
+    .search-input {
+        font-size: 0.85rem;
+    }
+
+    .topbar-actions {
+        gap: 8px;
+    }
+
+    .action-btn {
+        padding: 6px;
+    }
+
+    .action-btn svg {
+        width: 22px;
+        height: 22px;
+    }
+}

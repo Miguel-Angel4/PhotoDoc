@@ -12,3 +12,17 @@
   margin-left: 80px;
   /* Match sidebar width */
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .App-layout {
+    flex-direction: column;
+  }
+
+  .main-area {
+    margin-left: 0;
+    margin-bottom: 70px;
+    /* Space for bottom navigation */
+    width: 100%;
+  }
+}

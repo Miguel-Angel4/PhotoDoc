@@ -1118,3 +1118,73 @@
         box-shadow: 0 0 0 0 rgba(0, 188, 212, 0);
     }
 }
+
+@media (max-width: 768px) {
+    .patient-detail-container {
+        left: 0;
+        bottom: 70px;
+        /* Space for bottom nav */
+        z-index: 50;
+    }
+
+    .detail-header {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .header-left {
+        gap: 10px;
+    }
+
+    .detail-name {
+        font-size: 0.95rem;
+    }
+
+    .controls-bar {
+        padding: 8px 16px;
+        overflow-x: auto;
+        gap: 8px;
+    }
+
+    .photos-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .detail-footer {
+        bottom: 16px;
+        right: 16px;
+        /* Adjust if overlapping content */
+    }
+
+    /* Selection bar adjustment */
+    .selection-action-bar-container {
+        left: 0;
+        bottom: 70px;
+    }
+
+    .selection-action-bar {
+        padding: 12px;
+    }
+
+    .selection-options {
+        gap: 16px;
+    }
+
+    .selection-option-btn .option-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .selection-option-btn span {
+        font-size: 0.65rem;
+        text-align: center;
+    }
+
+    /* Modals need to fit */
+    .create-menu-container {
+        padding-bottom: 90px;
+    }
+}
