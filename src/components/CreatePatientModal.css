@@ -228,3 +228,48 @@
 ::placeholder {
     color: #666;
 }
+
+/* Edit Mode Enhancements */
+.edit-avatar-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+.big-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #2a3b41;
+    /* Dark blue-grey matching screenshot */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #acc8d0;
+}
+
+.modal-footer-actions {
+    padding: 20px;
+    border-top: 1px solid #2a2a2a;
+    display: flex;
+    justify-content: center;
+}
+
+.delete-patient-footer-btn {
+    background: none;
+    border: none;
+    color: #4db6ac;
+    /* Teal color matching screenshot */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+}
+
+.delete-patient-footer-btn:hover {
+    opacity: 1;
+}

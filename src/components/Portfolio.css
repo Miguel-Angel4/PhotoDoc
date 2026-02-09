@@ -101,6 +101,79 @@
     font-weight: 700;
 }
 
+/* View Switcher styles */
+.view-switcher {
+    display: flex;
+    background: #1a1d1f;
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.switch-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #90a4ae;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.switch-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.switch-btn.active {
+    background: #00bcd4;
+    color: #000;
+}
+
+/* Dropdown improvements */
+.dropdown-section-title {
+    padding: 8px 18px 4px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #90a4ae;
+    font-weight: 700;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 8px 0;
+}
+
+.folders-list-scroll {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+/* Custom scrollbar for dropdown */
+.folders-list-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.folders-list-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.folders-list-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.folders-list-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
 .portfolio-header .back-button {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);

@@ -78,14 +78,32 @@ const Dashboard = ({ photos, setPhotos, patients, setPatients, googleAccount, se
 
     if (selectedPatient) {
         return (
-            <PatientDetail
-                patient={selectedPatient}
-                onBack={handleBackToDashboard}
-                onOpenCollage={handleOpenCollage}
-                onEditPatient={handleEditPatient}
-                photos={photos}
-                setPhotos={setPhotos}
-            />
+            <>
+                <PatientDetail
+                    patient={selectedPatient}
+                    onBack={handleBackToDashboard}
+                    onOpenCollage={handleOpenCollage}
+                    onEditPatient={handleEditPatient}
+                    photos={photos}
+                    setPhotos={setPhotos}
+                    patients={patients}
+                />
+                <CreatePatientModal
+                    isOpen={isModalOpen}
+                    onClose={() => { setIsModalOpen(false); setEditingPatient(null); }}
+                    onSave={handleSavePatient}
+                    onDelete={(id) => {
+                        const patientName = patients.find(p => p.id === id)?.name;
+                        if (window.confirm(`¿Estás seguro de que quieres eliminar a ${patientName}?`)) {
+                            setPatients(patients.filter(p => p.id !== id));
+                            setPhotos(photos.filter(p => p.patientId !== id));
+                            setIsModalOpen(false);
+                            setSelectedPatient(null);
+                        }
+                    }}
+                    patientToEdit={editingPatient}
+                />
+            </>
         );
     }
 
@@ -95,6 +113,15 @@ const Dashboard = ({ photos, setPhotos, patients, setPatients, googleAccount, se
                 isOpen={isModalOpen}
                 onClose={() => { setIsModalOpen(false); setEditingPatient(null); }}
                 onSave={handleSavePatient}
+                onDelete={(id) => {
+                    const patientName = patients.find(p => p.id === id)?.name;
+                    if (window.confirm(`¿Estás seguro de que quieres eliminar a ${patientName}?`)) {
+                        setPatients(patients.filter(p => p.id !== id));
+                        setPhotos(photos.filter(p => p.patientId !== id));
+                        setIsModalOpen(false);
+                        setSelectedPatient(null);
+                    }
+                }}
                 patientToEdit={editingPatient}
             />
 

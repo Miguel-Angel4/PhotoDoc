@@ -34,7 +34,7 @@ const COUNTRY_CODES = [
     { code: '+61', country: 'AU', icon: '🇦🇺' },
 ];
 
-const CreatePatientModal = ({ isOpen, onClose, onSave, patientToEdit }) => {
+const CreatePatientModal = ({ isOpen, onClose, onSave, onDelete, patientToEdit }) => {
     const [formData, setFormData] = useState({
         name: '',
         day: '',
@@ -188,11 +188,20 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, patientToEdit }) => {
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                 </button>
-                <h2 className="modal-title">{patientToEdit ? 'Editar paciente' : 'Nuevo paciente'}</h2>
+                <h2 className="modal-title">{patientToEdit ? 'Paciente' : 'Nuevo paciente'}</h2>
                 <button className="save-btn" onClick={handleSubmit}>Guardar</button>
             </div>
 
             <div className="modal-content">
+                {patientToEdit && (
+                    <div className="edit-avatar-container">
+                        <div className="big-avatar">
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" />
+                            </svg>
+                        </div>
+                    </div>
+                )}
                 <form className="patient-form" onSubmit={(e) => e.preventDefault()}>
 
                     {/* Name Field */}
@@ -305,6 +314,26 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, patientToEdit }) => {
 
                 </form>
             </div>
+
+            {patientToEdit && (
+                <div className="modal-footer-actions">
+                    <button
+                        className="delete-patient-footer-btn"
+                        onClick={() => {
+                            if (window.confirm(`¿Estás seguro de que quieres eliminar a ${patientToEdit.name}?`)) {
+                                onDelete(patientToEdit.id);
+                                onClose();
+                            }
+                        }}
+                    >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        Eliminar paciente
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
