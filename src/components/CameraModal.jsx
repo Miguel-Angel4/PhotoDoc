@@ -8,6 +8,8 @@ const CameraModal = ({ isOpen, onClose, onPhotoTaken }) => {
     const [error, setError] = useState(null);
     const [capturedImage, setCapturedImage] = useState(null);
 
+    const [facingMode, setFacingMode] = useState('environment'); // 'user' or 'environment'
+
     useEffect(() => {
         if (isOpen) {
             startCamera();
@@ -17,14 +19,15 @@ const CameraModal = ({ isOpen, onClose, onPhotoTaken }) => {
         return () => {
             stopCamera();
         };
-    }, [isOpen]);
+    }, [isOpen, facingMode]); // Restart camera when facingMode changes
 
     const startCamera = async () => {
         setCapturedImage(null);
         setError(null);
         try {
+            stopCamera(); // Stop any existing stream first
             const mediaStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: 'environment' }
+                video: { facingMode: facingMode }
             });
             setStream(mediaStream);
             if (videoRef.current) {
@@ -116,9 +119,17 @@ const CameraModal = ({ isOpen, onClose, onPhotoTaken }) => {
                 {!error && (
                     <>
                         {!capturedImage ? (
-                            <button className="camera-btn" onClick={takePhoto}>
-                                <div className="camera-btn-inner"></div>
-                            </button>
+                            <div className="camera-action-row">
+                                <button className="switch-camera-btn" onClick={() => setFacingMode(prev => prev === 'user' ? 'environment' : 'user')}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M20 10c0-4.418-3.582-8-8-8s-8 3.582-8 8h2l-3 4-3-4h2c0-5.523 4.477-10 10-10s10 4.477 10 10h-2l3 4 3-4h-2z" transform="rotate(90 12 12)" />
+                                    </svg>
+                                </button>
+                                <button className="camera-btn" onClick={takePhoto}>
+                                    <div className="camera-btn-inner"></div>
+                                </button>
+                                <div style={{ width: 48 }}></div> {/* Spacer to center shutter */}
+                            </div>
                         ) : (
                             <>
                                 <button className="retry-btn" onClick={handleRetake}>Repetir</button>

@@ -732,3 +732,43 @@
     width: 20px;
     height: 20px;
 }
+
+@media (max-width: 768px) {
+    .collage-content {
+        flex-direction: column;
+    }
+
+    .collage-preview-area {
+        height: 50vh;
+        padding: 10px;
+    }
+
+    .collage-tools-area {
+        width: 100%;
+        height: 50vh;
+        border-left: none;
+        border-top: 1px solid #2a2a2a;
+        overflow-y: auto;
+        padding: 16px;
+    }
+
+    .collage-canvas {
+        width: 100%;
+        height: 100%;
+        max-width: 90vw;
+        max-height: 45vh;
+    }
+
+    .tools-toolbar {
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .layout-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .rotation-slider-container {
+        width: 100%;
+    }
+}
