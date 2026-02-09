@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from './components/Sidebar';
+import Sidebar from './components/Sidebar'; // Deployment trigger
 import TopBar from './components/TopBar';
 import Dashboard from './components/Dashboard';
 import AccountSettings from './components/AccountSettings';
