@@ -23,6 +23,7 @@ const CollageEditor = ({ onBack, photos, onSave }) => {
     const [selectedZoom, setSelectedZoom] = useState('whole');
     const [slotZooms, setSlotZooms] = useState({}); // Per-slot zoom overrides
     const [selectedSlot, setSelectedSlot] = useState(null);
+    const [selectedSidebarPhoto, setSelectedSidebarPhoto] = useState(null); // New: For mobile click-to-place
     const [rotations, setRotations] = useState({});
     const [fineRotations, setFineRotations] = useState({});
 
@@ -735,6 +736,53 @@ const CollageEditor = ({ onBack, photos, onSave }) => {
         return <span className="ai-status-badge success">Detectado</span>;
     };
 
+    const handleSidebarPhotoClick = (photoUrl) => {
+        if (selectedSidebarPhoto === photoUrl) {
+            setSelectedSidebarPhoto(null);
+        } else {
+            setSelectedSidebarPhoto(photoUrl);
+            setSelectedSlot(null); // Deselect any active slot
+        }
+    };
+
+    const handleSlotClick = (e, i) => {
+        e.stopPropagation();
+
+        // If we have a photo selected from sidebar, place it!
+        if (selectedSidebarPhoto) {
+            setSlotImages(prev => ({
+                ...prev,
+                [i]: selectedSidebarPhoto
+            }));
+            setOriginalImages(prev => ({
+                ...prev,
+                [i]: selectedSidebarPhoto
+            }));
+
+            // Clear landmarks and rotations for new image
+            setLandmarkData(prev => {
+                const next = { ...prev };
+                delete next[i];
+                return next;
+            });
+            setRotations(prev => {
+                const next = { ...prev };
+                delete next[i];
+                return next;
+            });
+            setFineRotations(prev => {
+                const next = { ...prev };
+                delete next[i];
+                return next;
+            });
+
+            setSelectedSidebarPhoto(null); // Clear selection after placement
+        } else {
+            // Normal behavior: Select slot for editing
+            setSelectedSlot(i);
+        }
+    };
+
     return (
         <div className="collage-editor-container">
             {/* Header */}
@@ -788,6 +836,11 @@ const CollageEditor = ({ onBack, photos, onSave }) => {
             <div className="collage-content">
                 {/* Preview Area */}
                 <div className="collage-preview-area" onClick={() => setSelectedSlot(null)}>
+                    {selectedSidebarPhoto && (
+                        <div className="mobile-instruction-overlay">
+                            Toca un hueco para colocar la foto
+                        </div>
+                    )}
                     <div className={`collage-canvas layout-${selectedLayout} fit-mode-${selectedZoom} ${hasBorder ? 'border-active' : ''}`}>
                         {[...Array(getSlotCount(selectedLayout))].map((_, i) => {
                             // Determine which image to show
@@ -801,10 +854,7 @@ const CollageEditor = ({ onBack, photos, onSave }) => {
                                     className={`collage-slot slot-${i + 1} ${!currentSrc ? 'empty' : 'has-image'} ${selectedSlot === i ? 'is-selected' : ''}`}
                                     onDragOver={handleDragOver}
                                     onDrop={(e) => handleDrop(e, i)}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setSelectedSlot(i);
-                                    }}
+                                    onClick={(e) => handleSlotClick(e, i)}
                                 >
                                     {currentSrc ? (
                                         <>
@@ -1038,9 +1088,10 @@ const CollageEditor = ({ onBack, photos, onSave }) => {
                                         photos.map(photo => (
                                             <div
                                                 key={photo.id}
-                                                className="sidebar-photo-item"
+                                                className={`sidebar-photo-item ${selectedSidebarPhoto === photo.url ? 'selected' : ''}`}
                                                 draggable="true"
                                                 onDragStart={(e) => handleDragStart(e, photo.url)}
+                                                onClick={() => handleSidebarPhotoClick(photo.url)}
                                             >
                                                 <img src={photo.url} alt="Available" />
                                             </div>

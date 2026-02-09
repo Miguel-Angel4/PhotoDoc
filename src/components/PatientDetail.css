@@ -1242,4 +1242,53 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    /* Filter Editor Mobile Adjustments */
+    .filter-editor-content {
+        flex-direction: column;
+    }
+
+    .editor-preview-container {
+        flex: 1;
+        padding: 20px;
+        max-height: 50vh;
+    }
+
+    .editor-image-wrapper {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .editor-preview-image {
+        max-width: 100%;
+        max-height: 40vh;
+        width: auto;
+        height: auto;
+    }
+
+    .editor-controls-sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 50vh;
+        padding: 16px;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        overflow-y: auto;
+    }
+
+    .editor-controls-sidebar .filter-card {
+        width: 70px;
+        height: 70px;
+        gap: 4px;
+    }
+
+    .editor-controls-sidebar .filter-card span {
+        font-size: 0.55rem;
+    }
+
+    .editor-floating-slider {
+        width: 90%;
+        max-width: 350px;
+        bottom: 20px;
+    }
 }
