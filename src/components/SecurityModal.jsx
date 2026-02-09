@@ -14,8 +14,11 @@ const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onP
         if (window.PublicKeyCredential) {
             PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()
                 .then(available => {
-                    setIsBiometricAvailable(available);
-                    if (available && mode === 'unlock' && isOpen) {
+                    // Check if we have a configured credential
+                    const hasConfigured = localStorage.getItem('biometricConfigured') === 'true';
+                    setIsBiometricAvailable(available && hasConfigured);
+
+                    if (available && hasConfigured && mode === 'unlock' && isOpen) {
                         handleBiometricAuth();
                     }
                 })
@@ -35,25 +38,71 @@ const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onP
     }, [isOpen]);
 
     const handleBiometricSetup = async () => {
-        if (!window.PublicKeyCredential) return;
+        if (!window.PublicKeyCredential) {
+            alert('La autenticación biométrica no está disponible en este dispositivo.');
+            return;
+        }
 
         try {
-            // Check if already supported and available
             const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
             if (!available) {
                 alert('La autenticación biométrica no está disponible en este dispositivo.');
                 return;
             }
 
-            // Note: Real registration requires a challenge from a server.
-            // For this UI, we will simulate the biometric check if it's just for the "feel"
-            // Or use a generic local registration if the environment allows.
+            // Generate a random challenge
+            const challenge = new Uint8Array(32);
+            window.crypto.getRandomValues(challenge);
 
-            // Simplified prompt for demonstration of "Huella"
-            alert('En un dispositivo móvil o con soporte WebAuthn, aquí se activaría el escáner de huellas.');
-            setIsBiometricAvailable(true);
+            // Create credential options
+            const publicKeyCredentialCreationOptions = {
+                challenge: challenge,
+                rp: {
+                    name: "PhotoDoc",
+                    id: window.location.hostname,
+                },
+                user: {
+                    id: new Uint8Array(16),
+                    name: "photodoc-user",
+                    displayName: "PhotoDoc User",
+                },
+                pubKeyCredParams: [
+                    {
+                        type: "public-key",
+                        alg: -7 // ES256
+                    },
+                    {
+                        type: "public-key",
+                        alg: -257 // RS256
+                    }
+                ],
+                authenticatorSelection: {
+                    authenticatorAttachment: "platform",
+                    userVerification: "required",
+                },
+                timeout: 60000,
+                attestation: "none"
+            };
+
+            // Create the credential (this will trigger biometric prompt)
+            const credential = await navigator.credentials.create({
+                publicKey: publicKeyCredentialCreationOptions
+            });
+
+            if (credential) {
+                // Store that biometric is configured
+                localStorage.setItem('biometricConfigured', 'true');
+                localStorage.setItem('biometricCredentialId', btoa(String.fromCharCode(...new Uint8Array(credential.rawId))));
+                setIsBiometricAvailable(true);
+                alert('✓ Huella digital configurada correctamente');
+            }
         } catch (err) {
             console.error('Biometric setup error:', err);
+            if (err.name === 'NotAllowedError') {
+                alert('Configuración cancelada o denegada');
+            } else {
+                alert('Error al configurar la huella digital: ' + err.message);
+            }
         }
     };
 
@@ -61,18 +110,44 @@ const SecurityModal = ({ isOpen, mode = 'unlock', onUnlock, onSetupComplete, onP
         if (!window.PublicKeyCredential) return;
 
         try {
-            // Again, real WebAuthn needs a server. 
-            // We'll simulate the "unlocking" behavior for the user request.
-            // On a real PWA on mobile, this would trigger the system prompt.
+            const credentialId = localStorage.getItem('biometricCredentialId');
+            if (!credentialId) {
+                console.log('No biometric credential found');
+                return;
+            }
 
-            // Simple check to show the intent
-            console.log('Biometric prompt triggered');
-            // For simulation purposes:
-            if (window.confirm('¿Simular escaneo de huella correcto?')) {
+            // Generate a random challenge
+            const challenge = new Uint8Array(32);
+            window.crypto.getRandomValues(challenge);
+
+            // Decode the credential ID
+            const credentialIdBuffer = Uint8Array.from(atob(credentialId), c => c.charCodeAt(0));
+
+            const publicKeyCredentialRequestOptions = {
+                challenge: challenge,
+                allowCredentials: [{
+                    id: credentialIdBuffer,
+                    type: 'public-key',
+                    transports: ['internal']
+                }],
+                userVerification: "required",
+                timeout: 60000,
+            };
+
+            // Get the credential (this will trigger biometric prompt)
+            const assertion = await navigator.credentials.get({
+                publicKey: publicKeyCredentialRequestOptions
+            });
+
+            if (assertion) {
+                // Biometric authentication successful
                 onUnlock();
             }
         } catch (err) {
             console.error('Biometric error:', err);
+            if (err.name === 'NotAllowedError') {
+                console.log('Biometric authentication cancelled');
+            }
         }
     };
 
