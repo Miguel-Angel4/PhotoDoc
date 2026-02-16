@@ -85,6 +85,48 @@
     color: #fff;
 }
 
+/* Sidebar Footer */
+.sidebar-footer {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 24px;
+}
+
+.bambai-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    opacity: 0.3;
+    transition: all 0.3s ease;
+}
+
+.bambai-link:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+.bambai-label {
+    font-size: 0.55rem;
+    color: #888;
+    margin-bottom: 2px;
+    font-weight: 500;
+}
+
+.bambai-brand {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.bambai-link:hover .bambai-brand {
+    color: #ffd700;
+}
+
 /* Mobile Sidebar (Bottom Nav) */
 @media (max-width: 768px) {
     .sidebar {
@@ -106,9 +148,10 @@
         z-index: 1000;
     }
 
-    .sidebar-logo {
+    .sidebar-logo,
+    .sidebar-footer {
         display: none;
-        /* Hide logo on mobile bottom bar */
+        /* Hide logo and footer on mobile bottom bar */
     }
 
     .sidebar-nav {

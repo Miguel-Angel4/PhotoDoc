@@ -57,6 +57,13 @@ const Sidebar = ({ activeView, onNavigate }) => {
                     <span>Cuenta</span>
                 </div>
             </nav>
+
+            <div className="sidebar-footer">
+                <a href="https://www.bambai.es/" target="_blank" rel="noopener noreferrer" className="bambai-link" title="Visitar Bambai.es">
+                    <span className="bambai-label">by</span>
+                    <span className="bambai-brand">Bambai</span>
+                </a>
+            </div>
         </aside>
     );
 };
