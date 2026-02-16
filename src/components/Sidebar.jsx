@@ -18,8 +18,8 @@ const Sidebar = ({ activeView, onNavigate }) => {
 
             <nav className="sidebar-nav">
                 <div
-                    className={`nav-item ${activeView === 'patients' ? 'active' : ''}`}
-                    onClick={() => onNavigate('patients')}
+                    className={`nav-item ${activeView === 'users' ? 'active' : ''}`}
+                    onClick={() => onNavigate('users')}
                 >
                     <div className="icon-container">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="nav-icon">
@@ -29,7 +29,7 @@ const Sidebar = ({ activeView, onNavigate }) => {
                             <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.005 6.11684 19.005 7.005C19.005 7.89316 18.7122 8.75608 18.1676 9.45768C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </div>
-                    <span>Pacientes</span>
+                    <span>Usuarios</span>
                 </div>
                 <div
                     className={`nav-item ${activeView === 'portfolio' ? 'active' : ''}`}

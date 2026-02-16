@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { removeBackground } from '@imgly/background-removal';
-import './PatientDetail.css';
+import './UserDetail.css';
 import CameraModal from './CameraModal';
 import FacialAnalysis from './FacialAnalysis';
-import MovePatientModal from './MovePatientModal';
+import MoveUserModal from './MoveUserModal';
 
-const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, setPhotos, patients }) => {
+const UserDetail = ({ user, onBack, onOpenCollage, onEditUser, photos, setPhotos, users }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isActionMenuOpen, setIsActionMenuOpen] = useState(false); // 3-dot menu
     const [isSelectionMode, setIsSelectionMode] = useState(false);
@@ -54,7 +54,7 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
             id: Date.now(),
             url: photoUrl,
             date: new Date().toLocaleDateString(),
-            patientId: patient.id // Associate with current patient
+            patientId: user.id // Associate with current user
         };
         setPhotos(prev => [newPhoto, ...prev]);
         setIsMenuOpen(false); // Ensure menu is closed
@@ -220,7 +220,7 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
                             id: Date.now() + Math.random(),
                             url: e.target.result, // This is now a persistent Base64 Data URL
                             date: new Date().toLocaleDateString(),
-                            patientId: patient.id
+                            patientId: user.id
                         });
                     };
                     reader.readAsDataURL(file);
@@ -252,16 +252,16 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
 
     // groupingMode is now initialized above
 
-    // Extract unique hashtags for this patient
+    // Extract unique hashtags for this user
     const availableHashtags = Array.from(new Set(
         photos
-            .filter(p => p.patientId === patient.id)
+            .filter(p => p.patientId === user.id)
             .flatMap(p => p.description?.match(/#[^\s#]+/g) || [])
     )).sort();
 
     const handleUpdatePhotoDescription = (photoId, description) => {
         setPhotos(prev => prev.map(p =>
-            p.id === photoId ? { ...p, description, patientId: patient.id } : p
+            p.id === photoId ? { ...p, description, patientId: user.id } : p
         ));
     };
 
@@ -271,11 +271,11 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
         }
     };
 
-    // Filter photos: show those belonging to this patient OR those with no patientId (legacy)
+    // Filter photos: show those belonging to this user OR those with no patientId (legacy)
     // AND apply active hashtag filter if any
-    const patientPhotos = photos.filter(p => {
-        const belongsToPatient = p.patientId === patient.id || !p.patientId;
-        if (!belongsToPatient) return false;
+    const userPhotos = photos.filter(p => {
+        const belongsToUser = p.patientId === user.id || !p.patientId;
+        if (!belongsToUser) return false;
 
         if (activeHashtagFilter) {
             return p.description?.includes(activeHashtagFilter);
@@ -297,9 +297,9 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
         }
     };
 
-    const handleMovePhotos = (targetPatientId) => {
+    const handleMovePhotos = (targetUserId) => {
         setPhotos(prev => prev.map(p =>
-            selectedPhotos.includes(p.id) ? { ...p, patientId: targetPatientId } : p
+            selectedPhotos.includes(p.id) ? { ...p, patientId: targetUserId } : p
         ));
         setSelectedPhotos([]);
         setIsSelectionMode(false);
@@ -433,7 +433,7 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
     };
 
     // Grouping logic for rendering
-    const photoGroups = patientPhotos.reduce((groups, photo) => {
+    const photoGroups = userPhotos.reduce((groups, photo) => {
         let keys = [];
         if (groupingMode === 'date') {
             keys = [photo.date];
@@ -441,7 +441,7 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
             const hashtags = photo.description?.match(/#[^\s#]+/g);
             keys = hashtags || ['Sin hashtag'];
         } else if (groupingMode === 'user') {
-            keys = [patient.name];
+            keys = [user.name];
         }
 
         keys.forEach(key => {
@@ -489,10 +489,10 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
                         </svg>
                     </button>
                     <div className="patient-profile-summary">
-                        <div className="detail-avatar">{patient.name.charAt(0).toUpperCase()}</div>
+                        <div className="detail-avatar">{user.name.charAt(0).toUpperCase()}</div>
                         <div className="detail-info">
-                            <span className="detail-name">{patient.name}</span>
-                            <span className="detail-age">{calculateAge(patient.dob)}</span>
+                            <span className="detail-name">{user.name}</span>
+                            <span className="detail-age">{calculateAge(user.dob)}</span>
                         </div>
                     </div>
                 </div>
@@ -545,7 +545,7 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
                             <>
                                 <div className="dropdown-backdrop" onClick={() => setIsActionMenuOpen(false)}></div>
                                 <div className="action-dropdown-menu">
-                                    <div className="action-option" onClick={() => { onEditPatient(); setIsActionMenuOpen(false); }}>Editar paciente</div>
+                                    <div className="action-option" onClick={() => { onEditUser(); setIsActionMenuOpen(false); }}>Editar usuario</div>
                                     <div className="action-option" onClick={() => { handleCollageClick(); setIsActionMenuOpen(false); }}>Crear Collage</div>
                                     <div className="action-option" onClick={() => { handleAnalysisClick(); setIsActionMenuOpen(false); }}>Análisis facial IA</div>
                                 </div>
@@ -623,10 +623,10 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
             </div>
 
             <div className="detail-content">
-                {patientPhotos.length > 0 ? (
+                {userPhotos.length > 0 ? (
                     viewMode === 'gallery' ? (
                         <div className="photos-grid">
-                            {patientPhotos.map(photo => (
+                            {userPhotos.map(photo => (
                                 <div
                                     key={photo.id}
                                     className={`photo-card ${isSelectionMode ? 'selection-mode' : ''} ${selectedPhotos.includes(photo.id) ? 'selected' : ''}`}
@@ -645,7 +645,7 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
                                             {selectedPhotos.includes(photo.id) && <div className="checked-inner"></div>}
                                         </div>
                                     )}
-                                    <img src={photo.url} alt="Patient" />
+                                    <img src={photo.url} alt="User" />
                                     <button
                                         className="delete-photo-btn"
                                         onClick={(e) => {
@@ -698,7 +698,7 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
                                                         {selectedPhotos.includes(photo.id) && <div className="checked-inner"></div>}
                                                     </div>
                                                 )}
-                                                <img src={photo.url} alt="Patient" />
+                                                <img src={photo.url} alt="User" />
                                                 <button
                                                     className="delete-photo-btn"
                                                     onClick={(e) => {
@@ -738,7 +738,7 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
                             </svg>
                         </div>
                         <p className="empty-state-text">
-                            Las fotos del paciente se mostrarán aquí. Utilice la aplicación PhotoDoc en dispositivos móviles para tomar o importar fotos.
+                            Las fotos del usuario se mostrarán aquí. Utilice la aplicación PhotoDoc en dispositivos móviles para tomar o importar fotos.
                         </p>
                     </div>
                 )}
@@ -812,7 +812,7 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
                         <div className="create-menu-backdrop" onClick={() => setIsAnalysisSourceModalOpen(false)}></div>
                         <div className={`analysis-source-modal ${isSelectingFromGallery ? 'gallery-mode' : ''}`}>
                             <div className="menu-handle"></div>
-                            <h3>{isSelectingFromGallery ? 'Seleccionar foto del paciente' : 'Seleccionar origen para análisis'}</h3>
+                            <h3>{isSelectingFromGallery ? 'Seleccionar foto del usuario' : 'Seleccionar origen para análisis'}</h3>
                             {!isSelectingFromGallery ? (
                                 <div className="source-options">
                                     <button className="source-btn" onClick={handleAnalysisCameraClick}>
@@ -827,17 +827,17 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
                             ) : (
                                 <div className="analysis-gallery-view">
                                     <div className="analysis-photo-grid">
-                                        {patientPhotos.map(photo => (
+                                        {userPhotos.map(photo => (
                                             <div
                                                 key={photo.id}
                                                 className="analysis-photo-item"
                                                 onClick={() => handleAnalysisGalleryPhotoSelect(photo.url)}
                                             >
-                                                <img src={photo.url} alt="Patient" />
+                                                <img src={photo.url} alt="User" />
                                             </div>
                                         ))}
-                                        {patientPhotos.length === 0 && (
-                                            <p className="no-photos-msg">No hay fotos previas del paciente.</p>
+                                        {userPhotos.length === 0 && (
+                                            <p className="no-photos-msg">No hay fotos previas del usuario.</p>
                                         )}
                                     </div>
                                     <div className="gallery-extra-actions">
@@ -946,11 +946,11 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
                 )
             }
 
-            <MovePatientModal
+            <MoveUserModal
                 isOpen={isMoveModalOpen}
                 onClose={() => setIsMoveModalOpen(false)}
-                patients={patients}
-                currentPatientId={patient.id}
+                users={users}
+                currentUserId={user.id}
                 onMove={handleMovePhotos}
             />
 
@@ -1099,4 +1099,4 @@ const PatientDetail = ({ patient, onBack, onOpenCollage, onEditPatient, photos, 
     );
 };
 
-export default PatientDetail;
+export default UserDetail;

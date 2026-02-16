@@ -10,13 +10,20 @@ const AccountSettings = ({ googleAccount, onDisconnect, photos = [] }) => {
 
     const handleGoogleLogin = async () => {
         try {
-            const { error } = await supabase.auth.signInWithOAuth({
+            const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: window.location.origin
+                    redirectTo: 'app.photodoc.mobile://login',
+                    skipBrowserRedirect: true
                 }
             });
             if (error) throw error;
+
+            if (data?.url) {
+                // Manually open the browser to handle the redirect correctly on mobile
+                const { Browser } = await import('@capacitor/browser');
+                await Browser.open({ url: data.url });
+            }
         } catch (error) {
             console.error('Error logging in:', error);
             alert('Error connecting to Google: ' + error.message);

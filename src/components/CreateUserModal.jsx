@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './CreatePatientModal.css';
+import './CreateUserModal.css';
 
 // Common country codes
 const COUNTRY_CODES = [
@@ -34,7 +34,7 @@ const COUNTRY_CODES = [
     { code: '+61', country: 'AU', icon: '🇦🇺' },
 ];
 
-const CreatePatientModal = ({ isOpen, onClose, onSave, onDelete, patientToEdit }) => {
+const CreateUserModal = ({ isOpen, onClose, onSave, onDelete, userToEdit }) => {
     const [formData, setFormData] = useState({
         name: '',
         day: '',
@@ -46,8 +46,8 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onDelete, patientToEdit }
     });
 
     React.useEffect(() => {
-        if (isOpen && patientToEdit) {
-            const [day, month, year] = patientToEdit.dob ? patientToEdit.dob.split('/') : ['', '', ''];
+        if (isOpen && userToEdit) {
+            const [day, month, year] = userToEdit.dob ? userToEdit.dob.split('/') : ['', '', ''];
             // Extract country code if present (simple heuristic: starts with +)
             // Assuming phone stored might be "123456789" or "+34 123456789"
             // For now, let's keep it simple. If we were storing it joined, we'd split it.
@@ -57,15 +57,15 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onDelete, patientToEdit }
             // Let's assume phone is just the digits in the edit object for simplicity or we'd need to parse.
 
             setFormData({
-                name: patientToEdit.name || '',
+                name: userToEdit.name || '',
                 day: day || '',
                 month: month || '',
                 year: year || '',
-                phone: patientToEdit.phone || '', // Assuming this comes clean or we'd need to parse
-                countryCode: patientToEdit.countryCode || '+34',
-                email: patientToEdit.email || ''
+                phone: userToEdit.phone || '', // Assuming this comes clean or we'd need to parse
+                countryCode: userToEdit.countryCode || '+34',
+                email: userToEdit.email || ''
             });
-        } else if (isOpen && !patientToEdit) {
+        } else if (isOpen && !userToEdit) {
             setFormData({
                 name: '',
                 day: '',
@@ -76,7 +76,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onDelete, patientToEdit }
                 email: ''
             });
         }
-    }, [isOpen, patientToEdit]);
+    }, [isOpen, userToEdit]);
 
     if (!isOpen) return null;
 
@@ -163,8 +163,8 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onDelete, patientToEdit }
         }
 
         try {
-            const newPatient = {
-                id: patientToEdit ? patientToEdit.id : Date.now(),
+            const newUser = {
+                id: userToEdit ? userToEdit.id : Date.now(),
                 name: formData.name,
                 dob: `${formData.day.padStart(2, '0')}/${formData.month.padStart(2, '0')}/${formData.year}`,
                 phone: formData.phone,
@@ -172,7 +172,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onDelete, patientToEdit }
                 fullPhone: `${formData.countryCode} ${formData.phone}`, // Optional convenience
                 email: formData.email
             };
-            onSave(newPatient);
+            onSave(newUser);
             onClose();
         } catch (error) {
             console.error('Error in handleSubmit:', error);
@@ -188,12 +188,12 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onDelete, patientToEdit }
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                 </button>
-                <h2 className="modal-title">{patientToEdit ? 'Paciente' : 'Nuevo paciente'}</h2>
+                <h2 className="modal-title">{userToEdit ? 'Usuario' : 'Nuevo usuario'}</h2>
                 <button className="save-btn" onClick={handleSubmit}>Guardar</button>
             </div>
 
             <div className="modal-content">
-                {patientToEdit && (
+                {userToEdit && (
                     <div className="edit-avatar-container">
                         <div className="big-avatar">
                             <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -315,13 +315,13 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onDelete, patientToEdit }
                 </form>
             </div>
 
-            {patientToEdit && (
+            {userToEdit && (
                 <div className="modal-footer-actions">
                     <button
                         className="delete-patient-footer-btn"
                         onClick={() => {
-                            if (window.confirm(`¿Estás seguro de que quieres eliminar a ${patientToEdit.name}?`)) {
-                                onDelete(patientToEdit.id);
+                            if (window.confirm(`¿Estás seguro de que quieres eliminar a ${userToEdit.name}?`)) {
+                                onDelete(userToEdit.id);
                                 onClose();
                             }
                         }}
@@ -330,7 +330,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onDelete, patientToEdit }
                             <polyline points="3 6 5 6 21 6"></polyline>
                             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                         </svg>
-                        Eliminar paciente
+                        Eliminar usuario
                     </button>
                 </div>
             )}
@@ -338,4 +338,4 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onDelete, patientToEdit }
     );
 };
 
-export default CreatePatientModal;
+export default CreateUserModal;

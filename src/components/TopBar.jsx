@@ -8,7 +8,7 @@ const TopBar = ({ onNavigate, searchQuery, setSearchQuery, onLock }) => {
                 <span className="search-icon">🔍</span>
                 <input
                     type="text"
-                    placeholder="Buscar paciente"
+                    placeholder="Buscar usuario"
                     className="search-input"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}

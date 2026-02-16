@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import './Portfolio.css';
 
-const Portfolio = ({ photos, patients }) => {
+const Portfolio = ({ photos, users }) => {
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [isHashtagMenuOpen, setIsHashtagMenuOpen] = useState(false);
     const [viewMode, setViewMode] = useState('folders'); // 'folders' or 'gallery'
     const [groupingMode, setGroupingMode] = useState('hashtags'); // 'hashtags', 'date', 'user'
 
-    const getPatientName = (patientId) => {
-        const patient = patients.find(p => p.id === patientId);
-        return patient ? patient.name : 'Paciente desconocido';
+    const getUserName = (userId) => {
+        const user = users.find(u => u.id === userId);
+        return user ? user.name : 'Usuario desconocido';
     };
 
     // Group photos based on active grouping mode
@@ -25,7 +25,7 @@ const Portfolio = ({ photos, patients }) => {
         } else if (groupingMode === 'date') {
             groups = [photo.date];
         } else if (groupingMode === 'user') {
-            groups = [getPatientName(photo.patientId)];
+            groups = [getUserName(photo.patientId)];
         }
 
         groups.forEach(group => {
@@ -78,7 +78,7 @@ const Portfolio = ({ photos, patients }) => {
                             </svg>
                         </button>
                     )}
-                    <h2>{selectedFolder ? `${groupingMode === 'hashtags' ? 'Carpeta' : groupingMode === 'date' ? 'Día' : 'Paciente'}: ${selectedFolder}` : 'Portafolio'}</h2>
+                    <h2>{selectedFolder ? `${groupingMode === 'hashtags' ? 'Carpeta' : groupingMode === 'date' ? 'Día' : 'Usuario'}: ${selectedFolder}` : 'Portafolio'}</h2>
                 </div>
 
                 <div className="portfolio-header-actions">
@@ -149,7 +149,7 @@ const Portfolio = ({ photos, patients }) => {
                                         <div className="dropdown-section">
                                             <div className="dropdown-divider"></div>
                                             <div className="dropdown-section-title">
-                                                {groupingMode === 'hashtags' ? 'Carpetas' : groupingMode === 'date' ? 'Fechas' : 'Pacientes'}
+                                                {groupingMode === 'hashtags' ? 'Carpetas' : groupingMode === 'date' ? 'Fechas' : 'Usuarios'}
                                             </div>
                                             <div className="folders-list-scroll">
                                                 {folders.map(tag => (
@@ -226,7 +226,7 @@ const Portfolio = ({ photos, patients }) => {
                                                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                                                 <circle cx="12" cy="7" r="4"></circle>
                                                             </svg>
-                                                            {getPatientName(photo.patientId)}
+                                                            {getUserName(photo.patientId)}
                                                         </div>
                                                         <div className="portfolio-timestamp">{photo.date}</div>
                                                     </div>
@@ -254,7 +254,7 @@ const Portfolio = ({ photos, patients }) => {
                                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                                     <circle cx="12" cy="7" r="4"></circle>
                                                 </svg>
-                                                {getPatientName(photo.patientId)}
+                                                {getUserName(photo.patientId)}
                                             </div>
                                             <div className="portfolio-timestamp">{photo.date}</div>
                                         </div>

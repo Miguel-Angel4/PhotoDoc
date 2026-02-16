@@ -1,9 +1,13 @@
 .topbar {
-    height: 60px;
+    /* Mobile Safe Area Handling */
+    height: calc(60px + env(safe-area-inset-top, 0px));
+    padding-top: env(safe-area-inset-top, 0px);
+
     background-color: var(--bg-topbar);
     display: flex;
     align-items: center;
-    padding: 0 24px;
+    padding-left: calc(24px + env(safe-area-inset-left, 0px));
+    padding-right: calc(24px + env(safe-area-inset-right, 0px));
     justify-content: space-between;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }

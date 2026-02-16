@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import './CreatePatientModal.css'; // Reuse modal styles
+import './CreateUserModal.css'; // Reuse modal styles
 
-const MovePatientModal = ({ isOpen, onClose, patients, currentPatientId, onMove }) => {
+const MoveUserModal = ({ isOpen, onClose, users, currentUserId, onMove }) => {
     const [selectedTargetId, setSelectedTargetId] = useState(null);
 
     if (!isOpen) return null;
 
-    const availablePatients = patients.filter(p => p.id !== currentPatientId);
+    const availableUsers = users.filter(u => u.id !== currentUserId);
 
     const handleConfirm = () => {
         if (selectedTargetId) {
@@ -19,12 +19,12 @@ const MovePatientModal = ({ isOpen, onClose, patients, currentPatientId, onMove 
         <div className="modal-overlay">
             <div className="modal-content" style={{ maxWidth: '400px' }}>
                 <div className="modal-header">
-                    <h2>Mover a otro paciente</h2>
+                    <h2>Mover a otro usuario</h2>
                     <button className="close-btn" onClick={onClose}>&times;</button>
                 </div>
 
                 <div className="modal-body">
-                    <p style={{ color: '#aaa', marginBottom: '15px' }}>Selecciona el paciente al que quieres mover las fotos seleccionadas:</p>
+                    <p style={{ color: '#aaa', marginBottom: '15px' }}>Selecciona el usuario al que quieres mover las fotos seleccionadas:</p>
 
                     <div className="patient-select-list" style={{
                         maxHeight: '300px',
@@ -33,15 +33,15 @@ const MovePatientModal = ({ isOpen, onClose, patients, currentPatientId, onMove 
                         flexDirection: 'column',
                         gap: '8px'
                     }}>
-                        {availablePatients.map(patient => (
+                        {availableUsers.map(user => (
                             <div
-                                key={patient.id}
-                                onClick={() => setSelectedTargetId(patient.id)}
+                                key={user.id}
+                                onClick={() => setSelectedTargetId(user.id)}
                                 style={{
                                     padding: '10px',
                                     borderRadius: '8px',
-                                    backgroundColor: selectedTargetId === patient.id ? '#00e5ff' : '#2a2f35',
-                                    color: selectedTargetId === patient.id ? '#000' : '#fff',
+                                    backgroundColor: selectedTargetId === user.id ? '#00e5ff' : '#2a2f35',
+                                    color: selectedTargetId === user.id ? '#000' : '#fff',
                                     cursor: 'pointer',
                                     display: 'flex',
                                     alignItems: 'center',
@@ -52,16 +52,16 @@ const MovePatientModal = ({ isOpen, onClose, patients, currentPatientId, onMove 
                                     width: '30px',
                                     height: '30px',
                                     borderRadius: '50%',
-                                    backgroundColor: selectedTargetId === patient.id ? '#000' : '#444',
-                                    color: selectedTargetId === patient.id ? '#fff' : '#ccc',
+                                    backgroundColor: selectedTargetId === user.id ? '#000' : '#444',
+                                    color: selectedTargetId === user.id ? '#fff' : '#ccc',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     fontSize: '14px'
                                 }}>
-                                    {patient.name.charAt(0).toUpperCase()}
+                                    {user.name.charAt(0).toUpperCase()}
                                 </div>
-                                <span>{patient.name}</span>
+                                <span>{user.name}</span>
                             </div>
                         ))}
                     </div>
@@ -83,4 +83,4 @@ const MovePatientModal = ({ isOpen, onClose, patients, currentPatientId, onMove 
     );
 };
 
-export default MovePatientModal;
+export default MoveUserModal;

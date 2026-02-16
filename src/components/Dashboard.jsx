@@ -1,50 +1,50 @@
 import React, { useState } from 'react';
 import './Dashboard.css';
-import CreatePatientModal from './CreatePatientModal';
-import PatientDetail from './PatientDetail';
+import CreateUserModal from './CreateUserModal';
+import UserDetail from './UserDetail';
 import CollageEditor from './CollageEditor';
 import { dataService } from '../dataService';
 
-const Dashboard = ({ photos, setPhotos, patients, setPatients, googleAccount, searchQuery }) => {
+const Dashboard = ({ photos, setPhotos, users, setUsers, googleAccount, searchQuery }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedPatient, setSelectedPatient] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
     const [isCollageOpen, setIsCollageOpen] = useState(false);
-    const [editingPatient, setEditingPatient] = useState(null);
+    const [editingUser, setEditingUser] = useState(null);
 
-    const handleSavePatient = (patient) => {
-        console.log('handleSavePatient called with:', patient);
+    const handleSaveUser = (user) => {
+        console.log('handleSaveUser called with:', user);
         try {
-            const existingIndex = patients.findIndex(p => p.id === patient.id);
+            const existingIndex = users.findIndex(u => u.id === user.id);
             if (existingIndex >= 0) {
                 // Update existing
-                console.log('Updating existing patient at index:', existingIndex);
-                const updatedPatients = [...patients];
-                updatedPatients[existingIndex] = patient;
-                setPatients(updatedPatients);
-                setSelectedPatient(patient); // Update selected view as well
+                console.log('Updating existing user at index:', existingIndex);
+                const updatedUsers = [...users];
+                updatedUsers[existingIndex] = user;
+                setUsers(updatedUsers);
+                setSelectedUser(user); // Update selected view as well
             } else {
                 // Add new
-                console.log('Adding new patient');
-                setPatients([...patients, patient]);
+                console.log('Adding new user');
+                setUsers([...users, user]);
             }
-            setEditingPatient(null);
-            console.log('handleSavePatient completed successfully');
+            setEditingUser(null);
+            console.log('handleSaveUser completed successfully');
         } catch (error) {
-            console.error('Error in handleSavePatient:', error);
+            console.error('Error in handleSaveUser:', error);
         }
     };
 
-    const handleEditPatient = () => {
-        setEditingPatient(selectedPatient);
+    const handleEditUser = () => {
+        setEditingUser(selectedUser);
         setIsModalOpen(true);
     };
 
-    const handlePatientClick = (patient) => {
-        setSelectedPatient(patient);
+    const handleUserClick = (user) => {
+        setSelectedUser(user);
     };
 
     const handleBackToDashboard = () => {
-        setSelectedPatient(null);
+        setSelectedUser(null);
     };
 
     const handleOpenCollage = () => {
@@ -56,13 +56,13 @@ const Dashboard = ({ photos, setPhotos, patients, setPatients, googleAccount, se
     };
 
     const handleCollageSave = (collageDataUrl) => {
-        if (!selectedPatient) return;
+        if (!selectedUser) return;
 
         const newPhoto = {
             id: Date.now(),
             url: collageDataUrl, // Data URL from html2canvas
             date: new Date().toLocaleDateString(),
-            patientId: selectedPatient.id,
+            patientId: selectedUser.id,
             description: 'collage' // Optional tag
         };
 
@@ -71,37 +71,37 @@ const Dashboard = ({ photos, setPhotos, patients, setPatients, googleAccount, se
     };
 
     if (isCollageOpen) {
-        // Filter photos: show those belonging to the selected patient OR those with no patientId (legacy)
-        const patientPhotos = photos.filter(p => p.patientId === selectedPatient?.id || !p.patientId);
-        return <CollageEditor onBack={handleBackFromCollage} photos={patientPhotos} onSave={handleCollageSave} />;
+        // Filter photos: show those belonging to the selected user OR those with no patientId (legacy)
+        const userPhotos = photos.filter(p => p.patientId === selectedUser?.id || !p.patientId);
+        return <CollageEditor onBack={handleBackFromCollage} photos={userPhotos} onSave={handleCollageSave} />;
     }
 
-    if (selectedPatient) {
+    if (selectedUser) {
         return (
             <>
-                <PatientDetail
-                    patient={selectedPatient}
+                <UserDetail
+                    user={selectedUser}
                     onBack={handleBackToDashboard}
                     onOpenCollage={handleOpenCollage}
-                    onEditPatient={handleEditPatient}
+                    onEditUser={handleEditUser}
                     photos={photos}
                     setPhotos={setPhotos}
-                    patients={patients}
+                    users={users}
                 />
-                <CreatePatientModal
+                <CreateUserModal
                     isOpen={isModalOpen}
-                    onClose={() => { setIsModalOpen(false); setEditingPatient(null); }}
-                    onSave={handleSavePatient}
+                    onClose={() => { setIsModalOpen(false); setEditingUser(null); }}
+                    onSave={handleSaveUser}
                     onDelete={(id) => {
-                        const patientName = patients.find(p => p.id === id)?.name;
-                        if (window.confirm(`¿Estás seguro de que quieres eliminar a ${patientName}?`)) {
-                            setPatients(patients.filter(p => p.id !== id));
+                        const userName = users.find(u => u.id === id)?.name;
+                        if (window.confirm(`¿Estás seguro de que quieres eliminar a ${userName}?`)) {
+                            setUsers(users.filter(u => u.id !== id));
                             setPhotos(photos.filter(p => p.patientId !== id));
                             setIsModalOpen(false);
-                            setSelectedPatient(null);
+                            setSelectedUser(null);
                         }
                     }}
-                    patientToEdit={editingPatient}
+                    userToEdit={editingUser}
                 />
             </>
         );
@@ -109,20 +109,20 @@ const Dashboard = ({ photos, setPhotos, patients, setPatients, googleAccount, se
 
     return (
         <main className="dashboard-content">
-            <CreatePatientModal
+            <CreateUserModal
                 isOpen={isModalOpen}
-                onClose={() => { setIsModalOpen(false); setEditingPatient(null); }}
-                onSave={handleSavePatient}
+                onClose={() => { setIsModalOpen(false); setEditingUser(null); }}
+                onSave={handleSaveUser}
                 onDelete={(id) => {
-                    const patientName = patients.find(p => p.id === id)?.name;
-                    if (window.confirm(`¿Estás seguro de que quieres eliminar a ${patientName}?`)) {
-                        setPatients(patients.filter(p => p.id !== id));
+                    const userName = users.find(u => u.id === id)?.name;
+                    if (window.confirm(`¿Estás seguro de que quieres eliminar a ${userName}?`)) {
+                        setUsers(users.filter(u => u.id !== id));
                         setPhotos(photos.filter(p => p.patientId !== id));
                         setIsModalOpen(false);
-                        setSelectedPatient(null);
+                        setSelectedUser(null);
                     }
                 }}
-                patientToEdit={editingPatient}
+                userToEdit={editingUser}
             />
 
             {!import.meta.env.VITE_SUPABASE_ANON_KEY?.startsWith('eyJ') && googleAccount && (
@@ -141,39 +141,39 @@ const Dashboard = ({ photos, setPhotos, patients, setPatients, googleAccount, se
             )}
 
             <div className="content-header">
-                <span className="patient-count">{patients.length} {patients.length === 1 ? 'paciente' : 'pacientes'}</span>
+                <span className="patient-count">{users.length} {users.length === 1 ? 'usuario' : 'usuarios'}</span>
             </div>
 
             <div className="patient-list">
-                {patients
-                    .filter(patient =>
+                {users
+                    .filter(user =>
                         !searchQuery ||
-                        patient.name.toLowerCase().includes(searchQuery.toLowerCase())
+                        user.name.toLowerCase().includes(searchQuery.toLowerCase())
                     )
-                    .map(patient => (
+                    .map(user => (
                         <div
                             className="patient-item"
-                            key={patient.id}
-                            onClick={() => handlePatientClick(patient)}
+                            key={user.id}
+                            onClick={() => handleUserClick(user)}
                             style={{ cursor: 'pointer' }}
                         >
                             <div className="avatar">
                                 {/* Initials or First letter */}
-                                {patient.name.charAt(0).toUpperCase()}
+                                {user.name.charAt(0).toUpperCase()}
                             </div>
                             <div className="patient-info">
-                                <span className="patient-name">{patient.name}</span>
+                                <span className="patient-name">{user.name}</span>
                                 {/* Maybe show DOB or just name as requested "pone en la parte de pacientes" */}
                             </div>
                             <button
                                 className="delete-patient-btn"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    if (window.confirm(`¿Estás seguro de que quieres eliminar a ${patient.name}?`)) {
-                                        const updatedPatients = patients.filter(p => p.id !== patient.id);
-                                        setPatients(updatedPatients);
-                                        // Also remove photos for this patient
-                                        const updatedPhotos = photos.filter(p => p.patientId !== patient.id);
+                                    if (window.confirm(`¿Estás seguro de que quieres eliminar a ${user.name}?`)) {
+                                        const updatedUsers = users.filter(u => u.id !== user.id);
+                                        setUsers(updatedUsers);
+                                        // Also remove photos for this user
+                                        const updatedPhotos = photos.filter(p => p.patientId !== user.id);
                                         setPhotos(updatedPhotos);
                                     }
                                 }}
@@ -190,7 +190,7 @@ const Dashboard = ({ photos, setPhotos, patients, setPatients, googleAccount, se
             </div>
 
             <button className="create-patient-btn" onClick={() => setIsModalOpen(true)}>
-                <span className="plus-icon">+</span> Crear paciente
+                <span className="plus-icon">+</span> Crear usuario
             </button>
         </main>
     );

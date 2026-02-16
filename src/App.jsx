@@ -13,7 +13,7 @@ import { supabase } from './supabaseClient';
 import './App.css';
 
 function App() {
-  const [currentView, setCurrentView] = useState('patients');
+  const [currentView, setCurrentView] = useState('users');
   const [securitySettings, setSecuritySettings] = useState(() => {
     const saved = localStorage.getItem('securitySettings');
     return saved ? JSON.parse(saved) : { enabled: false, pin: null };
@@ -79,7 +79,7 @@ function App() {
   });
 
   const [photos, setPhotos] = useState([]);
-  const [patients, setPatients] = useState([]);
+  const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
   const loadedAccountRef = React.useRef(null);
@@ -88,13 +88,13 @@ function App() {
     try {
       setGoogleAccount(null);
       setPhotos([]);
-      setPatients([]);
+      setUsers([]);
       localStorage.removeItem('googleAccount');
       // Force reload guest data immediately if needed
       const guestPhotos = dataService.getLocal('photos', 'guest');
-      const guestPatients = dataService.getLocal('patients', 'guest');
+      const guestUsers = dataService.getLocal('patients', 'guest');
       setPhotos(guestPhotos);
-      setPatients(guestPatients);
+      setUsers(guestUsers);
     } catch (e) {
       console.error('Error during account disconnect:', e);
     }
@@ -116,7 +116,7 @@ function App() {
           if (cloudData && (cloudData.photos || cloudData.patients)) {
             console.log('Cloud data found:', cloudData);
             setPhotos(cloudData.photos || []);
-            setPatients(cloudData.patients || []);
+            setUsers(cloudData.patients || []);
             // Also save to localStorage as backup
             dataService.setLocal('photos', googleAccount.email, cloudData.photos || []);
             dataService.setLocal('patients', googleAccount.email, cloudData.patients || []);
@@ -124,26 +124,26 @@ function App() {
             console.log('No cloud data found, checking localStorage');
             // Fallback to local account-specific storage
             const localPhotos = dataService.getLocal('photos', googleAccount.email);
-            const localPatients = dataService.getLocal('patients', googleAccount.email);
+            const localUsers = dataService.getLocal('patients', googleAccount.email);
             setPhotos(localPhotos);
-            setPatients(localPatients);
+            setUsers(localUsers);
 
             // If we have local data, sync it to cloud
-            if (localPhotos.length > 0 || localPatients.length > 0) {
+            if (localPhotos.length > 0 || localUsers.length > 0) {
               console.log('Syncing local data to cloud');
-              await dataService.saveToCloud(googleAccount.id, localPatients, localPhotos);
+              await dataService.saveToCloud(googleAccount.id, localUsers, localPhotos);
             }
           }
         } catch (error) {
           console.error('Error loading cloud data:', error);
           // Fallback to localStorage on error
           setPhotos(dataService.getLocal('photos', googleAccount.email));
-          setPatients(dataService.getLocal('patients', googleAccount.email));
+          setUsers(dataService.getLocal('patients', googleAccount.email));
         }
       } else {
         // Load guest data when no account is connected
         setPhotos(dataService.getLocal('photos', 'guest'));
-        setPatients(dataService.getLocal('patients', 'guest'));
+        setUsers(dataService.getLocal('patients', 'guest'));
       }
 
       loadedAccountRef.current = email;
@@ -159,15 +159,15 @@ function App() {
     // Only save if we have finished loading the data for THIS specific account/guest
     if (isInitialLoadComplete && loadedAccountRef.current === currentEmail) {
       dataService.setLocal('photos', currentEmail, photos);
-      dataService.setLocal('patients', currentEmail, patients);
+      dataService.setLocal('patients', currentEmail, users);
 
       if (googleAccount && googleAccount.id) {
         // ALWAYS use the user's UUID for cloud operations
         console.log('Saving to cloud for user ID:', googleAccount.id);
-        dataService.saveToCloud(googleAccount.id, patients, photos);
+        dataService.saveToCloud(googleAccount.id, users, photos);
       }
     }
-  }, [photos, patients, googleAccount, isInitialLoadComplete]);
+  }, [photos, users, googleAccount, isInitialLoadComplete]);
 
   React.useEffect(() => {
     if (googleAccount) {
@@ -218,6 +218,47 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Capacitor: Listen for deep links (Mobile OAuth Fix)
+  useEffect(() => {
+    const setupDeepLinks = async () => {
+      // Only run on native platforms
+      const { Capacitor } = await import('@capacitor/core');
+      if (!Capacitor.isNativePlatform()) return;
+
+      const { App: CapApp } = await import('@capacitor/app');
+      const { Browser } = await import('@capacitor/browser');
+
+      CapApp.addListener('appUrlOpen', async (data) => {
+        const url = new URL(data.url);
+        const params = new URLSearchParams(url.hash.substring(1)); // Supabase uses hash
+        const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
+
+        if (accessToken && refreshToken) {
+          const { data: { session }, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
+
+          if (error) console.error('Error setting session from deep link:', error);
+          if (session) {
+            console.log('Session set successfully from deep link');
+            // Close the browser window
+            try {
+              await Browser.close();
+            } catch (e) {
+              console.log('Browser already closed or not available');
+            }
+            // Navigate to account view or home
+            setCurrentView('account');
+          }
+        }
+      });
+    };
+
+    setupDeepLinks();
+  }, []);
+
   return (
     <div className="App-layout">
       <Sidebar activeView={currentView} onNavigate={setCurrentView} />
@@ -228,12 +269,12 @@ function App() {
           setSearchQuery={setSearchQuery}
           onLock={handleLockApp}
         />
-        {currentView === 'patients' && (
+        {currentView === 'users' && (
           <Dashboard
             photos={photos}
             setPhotos={setPhotos}
-            patients={patients}
-            setPatients={setPatients}
+            users={users}
+            setUsers={setUsers}
             googleAccount={googleAccount}
             searchQuery={searchQuery}
           />
@@ -246,13 +287,13 @@ function App() {
             photos={photos}
           />
         )}
-        {currentView === 'portfolio' && <Portfolio photos={photos} patients={patients} />}
+        {currentView === 'portfolio' && <Portfolio photos={photos} users={users} />}
         {currentView === 'settings' && (
           <AppSettings
             googleAccount={googleAccount}
             onConnect={setGoogleAccount}
             onDisconnect={handleAccountDisconnect}
-            onBack={() => setCurrentView('patients')}
+            onBack={() => setCurrentView('users')}
             photos={photos}
             securitySettings={securitySettings}
             setSecuritySettings={setSecuritySettings}

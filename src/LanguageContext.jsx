@@ -43,10 +43,10 @@ export const LanguageProvider = ({ children }) => {
 const translations = {
     es: {
         // TopBar
-        'search.placeholder': 'Buscar paciente',
+        'search.placeholder': 'Buscar usuario',
 
         // Sidebar
-        'sidebar.patients': 'Pacientes',
+        'sidebar.patients': 'Usuarios',
         'sidebar.portfolio': 'Portafolio',
         'sidebar.account': 'Cuenta',
 
@@ -87,10 +87,10 @@ const translations = {
     },
     en: {
         // TopBar
-        'search.placeholder': 'Search patient',
+        'search.placeholder': 'Search user',
 
         // Sidebar
-        'sidebar.patients': 'Patients',
+        'sidebar.patients': 'Users',
         'sidebar.portfolio': 'Portfolio',
         'sidebar.account': 'Account',
 
