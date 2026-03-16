@@ -11,6 +11,9 @@ import SecurityModal from './components/SecurityModal';
 import { dataService } from './dataService';
 import { supabase } from './supabaseClient';
 import { isAdminUser } from './config/roles'; // NEW
+import AdminUsers from './components/admin/AdminUsers'; // NEW
+import AdminCalendar from './components/admin/AdminCalendar'; // NEW
+import AdminAppointments from './components/admin/AdminAppointments'; // NEW
 import './App.css';
 
 function App() {
@@ -254,7 +257,7 @@ function App() {
 
   return (
     <div className="App-layout">
-      <Sidebar activeView={currentView} onNavigate={setCurrentView} />
+      <Sidebar activeView={currentView} onNavigate={setCurrentView} isAdminMode={isAdminMode} />
       <div className="main-area">
         <TopBar
           onNavigate={setCurrentView}
@@ -284,6 +287,9 @@ function App() {
           />
         )}
         {currentView === 'portfolio' && <Portfolio photos={photos} users={users} />}
+        {currentView === 'admin-users' && isAdminMode && <AdminUsers />}
+        {currentView === 'admin-calendar' && isAdminMode && <AdminCalendar />}
+        {currentView === 'admin-appointments' && isAdminMode && <AdminAppointments />}
         {currentView === 'settings' && (
           <AppSettings
             googleAccount={googleAccount}
