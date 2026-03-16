@@ -34,13 +34,32 @@ const AppSettings = ({ googleAccount, onConnect, onDisconnect, onBack, photos = 
 
     const handleGoogleLogin = async () => {
         try {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: window.location.origin
+            const { Capacitor } = await import('@capacitor/core');
+            const isNative = Capacitor.isNativePlatform();
+
+            if (isNative) {
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: 'app.photodoc.mobile://login',
+                        skipBrowserRedirect: true
+                    }
+                });
+                if (error) throw error;
+
+                if (data?.url) {
+                    const { Browser } = await import('@capacitor/browser');
+                    await Browser.open({ url: data.url });
                 }
-            });
-            if (error) throw error;
+            } else {
+                const { error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin
+                    }
+                });
+                if (error) throw error;
+            }
         } catch (error) {
             console.error('Error logging in:', error);
             alert('Error connecting to Google: ' + error.message);

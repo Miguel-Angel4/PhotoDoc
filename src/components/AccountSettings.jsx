@@ -10,19 +10,32 @@ const AccountSettings = ({ googleAccount, onDisconnect, photos = [] }) => {
 
     const handleGoogleLogin = async () => {
         try {
-            const { data, error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: 'app.photodoc.mobile://login',
-                    skipBrowserRedirect: true
-                }
-            });
-            if (error) throw error;
+            const { Capacitor } = await import('@capacitor/core');
+            const isNative = Capacitor.isNativePlatform();
 
-            if (data?.url) {
-                // Manually open the browser to handle the redirect correctly on mobile
-                const { Browser } = await import('@capacitor/browser');
-                await Browser.open({ url: data.url });
+            if (isNative) {
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: 'app.photodoc.mobile://login',
+                        skipBrowserRedirect: true
+                    }
+                });
+                if (error) throw error;
+
+                if (data?.url) {
+                    // Manually open the browser to handle the redirect correctly on mobile
+                    const { Browser } = await import('@capacitor/browser');
+                    await Browser.open({ url: data.url });
+                }
+            } else {
+                const { error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin
+                    }
+                });
+                if (error) throw error;
             }
         } catch (error) {
             console.error('Error logging in:', error);
