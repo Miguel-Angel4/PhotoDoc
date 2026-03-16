@@ -10,6 +10,7 @@ import Portfolio from './components/Portfolio';
 import SecurityModal from './components/SecurityModal';
 import { dataService } from './dataService';
 import { supabase } from './supabaseClient';
+import { isAdminUser } from './config/roles'; // NEW
 import './App.css';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
   const [isAppLocked, setIsAppLocked] = useState(securitySettings.enabled);
   const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(securitySettings.enabled);
   const [securityModalMode, setSecurityModalMode] = useState('unlock');
+  const [isAdminMode, setIsAdminMode] = useState(false); // NEW
 
   useEffect(() => {
     localStorage.setItem('securitySettings', JSON.stringify(securitySettings));
@@ -60,10 +62,7 @@ function App() {
     setIsSecurityModalOpen(false);
   };
 
-  const [currentUser, setCurrentUser] = useState({
-    email: 'usuario@ejemplo.com',
-    name: 'Usuario'
-  });
+
 
   const [googleAccount, setGoogleAccount] = useState(() => {
     try {
@@ -90,11 +89,7 @@ function App() {
       setPhotos([]);
       setUsers([]);
       localStorage.removeItem('googleAccount');
-      // Force reload guest data immediately if needed
-      const guestPhotos = dataService.getLocal('photos', 'guest');
-      const guestUsers = dataService.getLocal('patients', 'guest');
-      setPhotos(guestPhotos);
-      setUsers(guestUsers);
+      // Removed guest data reload to ensure app is empty without an account
     } catch (e) {
       console.error('Error during account disconnect:', e);
     }
@@ -141,9 +136,9 @@ function App() {
           setUsers(dataService.getLocal('patients', googleAccount.email));
         }
       } else {
-        // Load guest data when no account is connected
-        setPhotos(dataService.getLocal('photos', 'guest'));
-        setUsers(dataService.getLocal('patients', 'guest'));
+        // App should be empty when no account is connected
+        setPhotos([]);
+        setUsers([]);
       }
 
       loadedAccountRef.current = email;
@@ -152,16 +147,14 @@ function App() {
     loadData();
   }, [googleAccount]);
 
-  // Save data whenever it changes
+  // Save data whenever it changes (Only if logged in)
   React.useEffect(() => {
-    const currentEmail = googleAccount?.email || 'guest';
+    // Only save if we have finished loading the data and actually have an account
+    if (isInitialLoadComplete && googleAccount && googleAccount.email && loadedAccountRef.current === googleAccount.email) {
+      dataService.setLocal('photos', googleAccount.email, photos);
+      dataService.setLocal('patients', googleAccount.email, users);
 
-    // Only save if we have finished loading the data for THIS specific account/guest
-    if (isInitialLoadComplete && loadedAccountRef.current === currentEmail) {
-      dataService.setLocal('photos', currentEmail, photos);
-      dataService.setLocal('patients', currentEmail, users);
-
-      if (googleAccount && googleAccount.id) {
+      if (googleAccount.id) {
         // ALWAYS use the user's UUID for cloud operations
         console.log('Saving to cloud for user ID:', googleAccount.id);
         dataService.saveToCloud(googleAccount.id, users, photos);
@@ -268,6 +261,9 @@ function App() {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           onLock={handleLockApp}
+          isAdmin={isAdminUser(googleAccount?.email)}
+          isAdminMode={isAdminMode}
+          setIsAdminMode={setIsAdminMode}
         />
         {currentView === 'users' && (
           <Dashboard

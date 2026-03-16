@@ -47,6 +47,72 @@
     align-items: center;
 }
 
+.admin-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 8px;
+    padding: 4px 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+}
+
+.admin-toggle-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Switch Styles specifically for Admin Toggle in TopBar */
+.admin-switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+}
+
+.admin-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.admin-switch .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.admin-switch .slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.admin-switch input:checked + .slider {
+    background-color: #78dede;
+}
+
+.admin-switch input:focus + .slider {
+    box-shadow: 0 0 1px #78dede;
+}
+
+.admin-switch input:checked + .slider:before {
+    transform: translateX(16px);
+}
+
 .action-btn {
     background: none;
     color: #ffffff;
@@ -99,5 +165,48 @@
     .action-btn svg {
         width: 22px;
         height: 22px;
+    }
+
+    /* Mobile Branding */
+    .topbar-branding {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-right: 8px;
+    }
+
+    .topbar-logo .logo-svg {
+        height: 22px;
+        width: 22px;
+    }
+
+    .bambai-mobile-link {
+        display: flex;
+        gap: 2px;
+        text-decoration: none;
+        align-items: baseline;
+        line-height: 1;
+        margin-top: -2px;
+    }
+
+    .b-label {
+        font-size: 0.4rem;
+        color: #888;
+        font-weight: 500;
+    }
+
+    .b-brand {
+        font-size: 0.55rem;
+        font-weight: 800;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+}
+
+/* Hide mobile branding on desktop */
+@media (min-width: 769px) {
+    .topbar-branding {
+        display: none;
     }
 }

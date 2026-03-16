@@ -1,9 +1,27 @@
 import React from 'react';
 import './TopBar.css';
 
-const TopBar = ({ onNavigate, searchQuery, setSearchQuery, onLock }) => {
+const TopBar = ({ onNavigate, searchQuery, setSearchQuery, onLock, isAdmin, isAdminMode, setIsAdminMode }) => {
     return (
         <header className="topbar">
+            {/* Branding - Only visible on mobile in CSS */}
+            <div className="topbar-branding">
+                <div className="topbar-logo">
+                    <svg className="logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 3H8V5H5V8H3V3Z" fill="#78dede" />
+                        <path d="M16 3H21V8H19V5H16V3Z" fill="#78dede" />
+                        <path d="M3 16H5V19H8V21H3V16Z" fill="#78dede" />
+                        <path d="M16 21V19H19V16H21V21H16Z" fill="#78dede" />
+                        <circle cx="12" cy="10" r="4" stroke="#78dede" strokeWidth="2" />
+                        <path d="M16 19C16 16.7909 14.2091 15 12 15C9.79086 15 8 16.7909 8 19" stroke="#78dede" strokeWidth="2" />
+                    </svg>
+                </div>
+                <a href="https://www.bambai.es/" target="_blank" rel="noopener noreferrer" className="bambai-mobile-link">
+                    <span className="b-label">by</span>
+                    <span className="b-brand">Bambai</span>
+                </a>
+            </div>
+
             <div className="search-container">
                 <span className="search-icon">🔍</span>
                 <input
@@ -16,6 +34,20 @@ const TopBar = ({ onNavigate, searchQuery, setSearchQuery, onLock }) => {
             </div>
 
             <div className="topbar-actions">
+                {isAdmin && (
+                    <div className="admin-toggle-container">
+                        <span className="admin-toggle-label">Admin</span>
+                        <label className="switch admin-switch">
+                            <input
+                                type="checkbox"
+                                checked={isAdminMode}
+                                onChange={(e) => setIsAdminMode(e.target.checked)}
+                            />
+                            <span className="slider round"></span>
+                        </label>
+                    </div>
+                )}
+
                 <button className="action-btn" title="Refresh">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M23 12a11 11 0 0 1-20.36 5"></path>
