@@ -291,7 +291,7 @@ function App() {
         {currentView === 'admin-users' && isAdminMode && <AdminUsers />}
         {currentView === 'admin-calendar' && isAdminMode && <AdminCalendar />}
         {currentView === 'admin-appointments' && isAdminMode && <AdminAppointments />}
-        {currentView === 'appointments' && !isAdminMode && <UserAppointments />}
+        {currentView === 'appointments' && !isAdminMode && <UserAppointments googleAccount={googleAccount} />}
         {currentView === 'settings' && (
           <AppSettings
             googleAccount={googleAccount}
