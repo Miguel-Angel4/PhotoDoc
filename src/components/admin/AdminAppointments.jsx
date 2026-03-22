@@ -110,15 +110,21 @@ const AdminAppointments = () => {
                             </div>
 
                             <div className="appointment-actions">
-                                {(appt.status === 'pending' || appt.status === 'proposed') && (
+                                {appt.status === 'pending' && (
                                     <>
                                         <button className="action-btn btn-accept" onClick={() => handleAccept(appt.id)}>Aceptar</button>
                                         <button className="action-btn btn-reject" onClick={() => handleReject(appt.id)}>Rechazar</button>
                                         <button className="action-btn btn-modify" onClick={() => handleModifyClick(appt)}>Modificar</button>
                                     </>
                                 )}
+                                {appt.status === 'proposed' && (
+                                    <>
+                                        <button className="action-btn btn-reject" onClick={() => handleReject(appt.id)}>Retirar Propuesta</button>
+                                        <button className="action-btn btn-modify" onClick={() => handleModifyClick(appt)}>Cambiar Propuesta</button>
+                                    </>
+                                )}
                                 {appt.status === 'accepted' && (
-                                    <button className="action-btn btn-reject" onClick={() => handleReject(appt.id)}>Cancelar</button>
+                                    <span style={{ color: '#22c55e', fontWeight: 'bold' }}>Cita Confirmada</span>
                                 )}
                             </div>
                         </div>
