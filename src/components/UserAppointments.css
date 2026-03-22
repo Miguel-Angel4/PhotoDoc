@@ -55,3 +55,119 @@
 
 .btn-confirm { background: #22c55e; color: white; }
 .btn-decline { background: #ef4444; color: white; }
+
+/* Request Modal Specifics */
+.request-btn-container {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-new-appointment {
+    background: #0ea5e9;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+    transition: all 0.3s ease;
+}
+
+.btn-new-appointment:hover {
+    background: #0284c7;
+    transform: scale(1.05);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    color: #78dede;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.weekday-header {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: bold;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(30, 41, 59, 0.5);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.calendar-day:hover:not(.disabled) {
+    background: rgba(120, 222, 222, 0.2);
+}
+
+.calendar-day.selected {
+    background: #78dede;
+    color: #0f172a;
+    font-weight: bold;
+}
+
+.calendar-day.disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+}
+
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.time-slot {
+    padding: 8px;
+    text-align: center;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(120, 222, 222, 0.2);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.time-slot.selected {
+    background: #78dede;
+    color: #0f172a;
+    border-color: #78dede;
+}
+
+.reason-textarea {
+    width: 100%;
+    min-height: 100px;
+    background: #0f172a;
+    border: 1px solid rgba(120, 222, 222, 0.2);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    resize: none;
+    margin-top: 12px;
+}
+
+.summary-details {
+    background: rgba(120, 222, 222, 0.05);
+    padding: 16px;
+    border-radius: 12px;
+    border-left: 4px solid #78dede;
+    margin: 16px 0;
+}
