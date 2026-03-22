@@ -1,0 +1,78 @@
+.calendar-container {
+    padding: 24px;
+    color: white;
+}
+
+.calendar-agenda {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.agenda-item {
+    background: rgba(30, 41, 59, 0.4);
+    border-left: 4px solid #78dede;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.agenda-item:hover {
+    transform: translateX(5px);
+    background: rgba(30, 41, 59, 0.6);
+}
+
+.agenda-date {
+    display: flex;
+    flex-direction: column;
+}
+
+.agenda-date .day {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #78dede;
+}
+
+.agenda-date .month {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+
+.agenda-info {
+    flex: 1;
+    margin-left: 24px;
+}
+
+.agenda-info h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #f1f5f9;
+}
+
+.agenda-info p {
+    margin: 4px 0 0 0;
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+.agenda-time {
+    background: rgba(120, 222, 222, 0.1);
+    color: #78dede;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.no-appointments {
+    text-align: center;
+    padding: 48px;
+    color: #64748b;
+    border: 2px dashed rgba(120, 222, 222, 0.1);
+    border-radius: 12px;
+}
