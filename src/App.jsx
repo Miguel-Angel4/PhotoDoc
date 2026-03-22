@@ -14,6 +14,7 @@ import { isAdminUser } from './config/roles'; // NEW
 import AdminUsers from './components/admin/AdminUsers'; // NEW
 import AdminCalendar from './components/admin/AdminCalendar'; // NEW
 import AdminAppointments from './components/admin/AdminAppointments'; // NEW
+import UserAppointments from './components/UserAppointments'; // NEW
 import './App.css';
 
 function App() {
@@ -290,6 +291,7 @@ function App() {
         {currentView === 'admin-users' && isAdminMode && <AdminUsers />}
         {currentView === 'admin-calendar' && isAdminMode && <AdminCalendar />}
         {currentView === 'admin-appointments' && isAdminMode && <AdminAppointments />}
+        {currentView === 'appointments' && !isAdminMode && <UserAppointments />}
         {currentView === 'settings' && (
           <AppSettings
             googleAccount={googleAccount}
